@@ -54,5 +54,12 @@
   "openMap": "Відкрити збережене місцезнаходження",
   "purchaseItem": "Купити",
   "purchaseCompleted": "Придбано",
-  "quickAddFunds": "Швидке додавання коштів"
+  "quickAddFunds": "Швидке додавання коштів",
+  "toBuy": "До купівлі",
+  "purchased": "Куплено",
+  "emptyToBuy": "Немає що купувати.",
+  "emptyPurchased": "Ще немає придбаних товарів.",
+  "editItem": "Редагувати товар",
+  "chooseImageSource": "Додати фото",
+  "chooseFromGallery": "Вибрати з галереї"
 }

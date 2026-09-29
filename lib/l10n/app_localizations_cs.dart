@@ -173,4 +173,25 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get quickAddFunds => 'Rychlé přidání peněz';
+
+  @override
+  String get toBuy => 'K nákupu';
+
+  @override
+  String get purchased => 'Zakoupené';
+
+  @override
+  String get emptyToBuy => 'Není co koupit.';
+
+  @override
+  String get emptyPurchased => 'Zatím žádné zakoupené položky.';
+
+  @override
+  String get editItem => 'Upravit položku';
+
+  @override
+  String get chooseImageSource => 'Přidat fotografii';
+
+  @override
+  String get chooseFromGallery => 'Vybrat z galerie';
 }

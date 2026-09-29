@@ -427,6 +427,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Quick add funds'**
   String get quickAddFunds;
+
+  /// No description provided for @toBuy.
+  ///
+  /// In en, this message translates to:
+  /// **'To Buy'**
+  String get toBuy;
+
+  /// No description provided for @purchased.
+  ///
+  /// In en, this message translates to:
+  /// **'Purchased'**
+  String get purchased;
+
+  /// No description provided for @emptyToBuy.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing left to buy.'**
+  String get emptyToBuy;
+
+  /// No description provided for @emptyPurchased.
+  ///
+  /// In en, this message translates to:
+  /// **'No purchased items yet.'**
+  String get emptyPurchased;
+
+  /// No description provided for @editItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit item'**
+  String get editItem;
+
+  /// No description provided for @chooseImageSource.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a photo'**
+  String get chooseImageSource;
+
+  /// No description provided for @chooseFromGallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose from gallery'**
+  String get chooseFromGallery;
 }
 
 class _AppLocalizationsDelegate

@@ -54,5 +54,12 @@
   "openMap": "Abrir ubicación guardada",
   "purchaseItem": "Comprar",
   "purchaseCompleted": "Comprado",
-  "quickAddFunds": "Añadir fondos rápidamente"
+  "quickAddFunds": "Añadir fondos rápidamente",
+  "toBuy": "Por comprar",
+  "purchased": "Comprados",
+  "emptyToBuy": "No hay nada que comprar.",
+  "emptyPurchased": "Aún no hay artículos comprados.",
+  "editItem": "Editar artículo",
+  "chooseImageSource": "Añadir una foto",
+  "chooseFromGallery": "Elegir de la galería"
 }

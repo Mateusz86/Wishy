@@ -20,6 +20,7 @@ abstract interface class WishlistRepository {
       String? storeLink,
       double? latitude,
       double? longitude});
+  Future<void> updateItem(WishlistItem item);
   Future<void> deleteItem(WishlistItem item);
   Future<void> reorderItems(int profileId, List<WishlistItem> items);
   Future<void> adjustBudget(int profileId, double amount);
