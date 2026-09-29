@@ -203,4 +203,20 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get storeLocation => 'Umístění obchodu';
+
+  @override
+  String get premiumPaywallMessage =>
+      'Dosáhli jste limitu bezplatné verze (max. 2 profily / 3 položky). Odemkněte plnou verzi za pouhých 5 PLN/měsíc!';
+
+  @override
+  String get unlockPremium => 'Odemknout Premium';
+
+  @override
+  String get backdoorPasswordPrompt => 'Zadejte testovací heslo';
+
+  @override
+  String get invalidBackdoorPassword => 'Nesprávné heslo.';
+
+  @override
+  String get premiumUnlocked => 'Verze Premium odemčena!';
 }

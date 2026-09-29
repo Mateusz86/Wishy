@@ -36,6 +36,93 @@ class WishlistHomePage extends ConsumerWidget {
       );
 }
 
+class _BackdoorBrandTitle extends ConsumerStatefulWidget {
+  const _BackdoorBrandTitle();
+
+  @override
+  ConsumerState<_BackdoorBrandTitle> createState() =>
+      _BackdoorBrandTitleState();
+}
+
+class _BackdoorBrandTitleState extends ConsumerState<_BackdoorBrandTitle> {
+  Timer? _holdTimer;
+
+  void _beginHold() {
+    _holdTimer?.cancel();
+    _holdTimer = Timer(const Duration(milliseconds: 4500), _requestUnlock);
+  }
+
+  Future<void> _requestUnlock() async {
+    final password = await showDialog<String>(
+      context: context,
+      builder: (dialogContext) {
+        final controller = TextEditingController();
+        return AlertDialog(
+          title: Text(context.loc.premiumRequired),
+          content: TextField(
+            controller: controller,
+            obscureText: true,
+            autofocus: true,
+            decoration: InputDecoration(
+              labelText: context.loc.backdoorPasswordPrompt,
+            ),
+            onSubmitted: (value) => Navigator.pop(dialogContext, value),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext),
+              child: Text(context.loc.cancel),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.pop(dialogContext, controller.text),
+              child: Text(context.loc.unlockPremium),
+            ),
+          ],
+        );
+      },
+    );
+    if (!mounted || password == null) return;
+    if (password == 'TATA2026') {
+      await ref.read(premiumProvider.notifier).activatePremium();
+      ref.invalidate(premiumProvider);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(context.loc.premiumUnlocked)),
+        );
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(context.loc.invalidBackdoorPassword)),
+      );
+    }
+  }
+
+  @override
+  void dispose() {
+    _holdTimer?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onLongPressStart: (_) => _beginHold(),
+        onLongPressEnd: (_) => _holdTimer?.cancel(),
+        onLongPressCancel: () => _holdTimer?.cancel(),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(Icons.auto_awesome, color: Color(0xFF087F75), size: 22),
+            const SizedBox(width: 8),
+            Text(
+              context.loc.appTitle,
+              style: GoogleFonts.nunito(fontWeight: FontWeight.w900),
+            ),
+          ],
+        ),
+      );
+}
+
 class _ProfileWishlistPage extends ConsumerWidget {
   const _ProfileWishlistPage({super.key, required this.profile});
 
@@ -44,6 +131,8 @@ class _ProfileWishlistPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final items = ref.watch(wishlistItemsProvider(profile.id));
+    final allItems = ref.watch(allWishlistItemsProvider);
+    final premium = ref.watch(premiumProvider).valueOrNull ?? false;
     final preferences = ref.watch(appPreferencesProvider).valueOrNull;
     final locale = Localizations.localeOf(context).toString();
     final currencyCode = preferences?.selectedCurrency ?? 'auto';
@@ -53,23 +142,11 @@ class _ProfileWishlistPage extends ConsumerWidget {
     );
 
     return DefaultTabController(
-      length: 2,
+      length: premium ? 2 : 1,
       child: Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Icon(Icons.auto_awesome,
-                  color: Color(0xFF087F75), size: 22),
-              const SizedBox(width: 8),
-              Text(
-                context.loc.appTitle,
-                style: GoogleFonts.nunito(fontWeight: FontWeight.w900),
-              ),
-            ],
-          ),
+          title: const _BackdoorBrandTitle(),
           actions: [
             IconButton(
               tooltip: context.loc.selectProfile,
@@ -137,12 +214,18 @@ class _ProfileWishlistPage extends ConsumerWidget {
                   ),
                   IconButton.filled(
                     tooltip: context.loc.addItem,
-                    onPressed: items.valueOrNull == null
+                    onPressed: allItems.valueOrNull == null
                         ? null
                         : () {
-                            if (items.valueOrNull!.length >=
-                                AppLimits.maxWishlistItems) {
-                              showPremiumRequiredDialog(context);
+                            if (!premium &&
+                                allItems.valueOrNull!.length >=
+                                    AppLimits.maxWishlistItems) {
+                              showPremiumRequiredDialog(
+                                context,
+                                onUnlock: () => ref
+                                    .read(premiumProvider.notifier)
+                                    .activatePremium(),
+                              );
                             } else {
                               _addItem(context, ref);
                             }
@@ -178,7 +261,7 @@ class _ProfileWishlistPage extends ConsumerWidget {
                     labelStyle: const TextStyle(fontWeight: FontWeight.w800),
                     tabs: [
                       Tab(text: context.loc.toBuy),
-                      Tab(text: context.loc.purchased),
+                      if (premium) Tab(text: context.loc.purchased),
                     ],
                   ),
                 ),
@@ -197,18 +280,19 @@ class _ProfileWishlistPage extends ConsumerWidget {
                           item: item, currency: currency),
                     )),
                   ),
-                  _WishlistTab(
-                    profile: profile,
-                    currency: currency,
-                    purchased: true,
-                    onDelete: (item) => _deleteItem(context, ref, item),
-                    onEdit: (item) => _editItem(context, ref, item),
-                    onOpen: (item) =>
-                        Navigator.of(context).push(MaterialPageRoute(
-                      builder: (_) => WishlistItemDetailsPage(
-                          item: item, currency: currency),
-                    )),
-                  ),
+                  if (premium)
+                    _WishlistTab(
+                      profile: profile,
+                      currency: currency,
+                      purchased: true,
+                      onDelete: (item) => _deleteItem(context, ref, item),
+                      onEdit: (item) => _editItem(context, ref, item),
+                      onOpen: (item) =>
+                          Navigator.of(context).push(MaterialPageRoute(
+                        builder: (_) => WishlistItemDetailsPage(
+                            item: item, currency: currency),
+                      )),
+                    ),
                 ]),
               ),
               const _AdBannerPlaceholder(),
@@ -289,6 +373,7 @@ class _ProfileWishlistPage extends ConsumerWidget {
       } else {
         await ref.read(wishlistRepositoryProvider).addItem(
               profileId: profile.id,
+              isPremium: await ref.read(premiumProvider.future),
               title: result.title,
               price: result.price,
               imagePaths: imagePaths,
@@ -299,12 +384,16 @@ class _ProfileWishlistPage extends ConsumerWidget {
             );
       }
       ref.invalidate(wishlistItemsProvider(profile.id));
+      ref.invalidate(allWishlistItemsProvider);
     } on WishlistLimitException {
       for (final storedPath in storedPaths) {
         if (await File(storedPath).exists()) await File(storedPath).delete();
       }
       if (editing == null && context.mounted) {
-        await showPremiumRequiredDialog(context);
+        await showPremiumRequiredDialog(
+          context,
+          onUnlock: () => ref.read(premiumProvider.notifier).activatePremium(),
+        );
       }
     } catch (_) {
       for (final storedPath in storedPaths) {
@@ -334,6 +423,7 @@ class _ProfileWishlistPage extends ConsumerWidget {
     if (confirmed != true) return;
     await ref.read(wishlistRepositoryProvider).deleteItem(item);
     ref.invalidate(wishlistItemsProvider(profile.id));
+    ref.invalidate(allWishlistItemsProvider);
   }
 
   Future<void> _sortItems(

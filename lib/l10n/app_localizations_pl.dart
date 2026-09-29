@@ -203,4 +203,20 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get storeLocation => 'Lokalizacja sklepu';
+
+  @override
+  String get premiumPaywallMessage =>
+      'Osiągnąłeś limit darmowej wersji (Max 2 profile / 3 przedmioty). Odblokuj pełną wersję za jedyne 5 zł/miesiąc!';
+
+  @override
+  String get unlockPremium => 'Odblokuj Premium';
+
+  @override
+  String get backdoorPasswordPrompt => 'Wpisz hasło testowe';
+
+  @override
+  String get invalidBackdoorPassword => 'Nieprawidłowe hasło.';
+
+  @override
+  String get premiumUnlocked => 'Wersja Premium odblokowana!';
 }

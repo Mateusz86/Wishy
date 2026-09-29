@@ -17,13 +17,14 @@ class AppDatabase {
     final directory = await getApplicationDocumentsDirectory();
     final db = await openDatabase(
       path.join(directory.path, 'wishy.db'),
-      version: 4,
+      version: 5,
       onConfigure: (database) => database.execute('PRAGMA foreign_keys = ON'),
       onCreate: (database, version) => _createSchema(database),
       onUpgrade: (database, oldVersion, newVersion) async {
         if (oldVersion < 2) await _migrateToProfiles(database);
         if (oldVersion < 3) await _migrateWishlistDetails(database);
         if (oldVersion < 4) await _migratePurchasedItems(database);
+        if (oldVersion < 5) await _migrateFreemiumLimits(database);
       },
     );
     _database = db;
@@ -67,7 +68,6 @@ class AppDatabase {
         .insert('app_settings', {'key': 'selectedLanguage', 'value': 'en'});
     await database
         .insert('app_settings', {'key': 'selectedCurrency', 'value': 'auto'});
-    await _createLimitTriggers(database);
   }
 
   Future<void> _migratePurchasedItems(DatabaseExecutor database) async {
@@ -103,7 +103,6 @@ class AppDatabase {
     }
     await database
         .execute('DROP TRIGGER IF EXISTS enforce_wishlist_item_limit');
-    await _createLimitTriggers(database);
   }
 
   Future<void> _migrateToProfiles(DatabaseExecutor database) async {
@@ -157,26 +156,12 @@ class AppDatabase {
       await _putSetting(
           database, 'activeProfileId', profiles.first['id'].toString());
     }
-    await _createLimitTriggers(database);
   }
 
-  Future<void> _createLimitTriggers(DatabaseExecutor database) async {
-    await database.execute('''
-      CREATE TRIGGER IF NOT EXISTS enforce_profile_limit
-      BEFORE INSERT ON child_profiles
-      WHEN (SELECT COUNT(*) FROM child_profiles) >= ${AppLimits.maxProfiles}
-      BEGIN
-        SELECT RAISE(ABORT, 'profile limit reached');
-      END
-    ''');
-    await database.execute('''
-      CREATE TRIGGER IF NOT EXISTS enforce_wishlist_item_limit
-      BEFORE INSERT ON wishlist_items
-      WHEN (SELECT COUNT(*) FROM wishlist_items WHERE child_profile_id = NEW.child_profile_id) >= ${AppLimits.maxWishlistItems}
-      BEGIN
-        SELECT RAISE(ABORT, 'wishlist item limit reached');
-      END
-    ''');
+  Future<void> _migrateFreemiumLimits(DatabaseExecutor database) async {
+    await database.execute('DROP TRIGGER IF EXISTS enforce_profile_limit');
+    await database
+        .execute('DROP TRIGGER IF EXISTS enforce_wishlist_item_limit');
   }
 
   Future<void> _putSetting(

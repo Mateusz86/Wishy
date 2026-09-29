@@ -5,6 +5,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../data/repositories/local_preferences_repository.dart';
 import '../../data/repositories/local_wishlist_repository.dart';
@@ -27,6 +28,27 @@ final appPreferencesProvider =
     AsyncNotifierProvider<AppPreferencesController, AppPreferences>(
   AppPreferencesController.new,
 );
+
+final premiumProvider =
+    AsyncNotifierProvider<PremiumController, bool>(PremiumController.new);
+
+class PremiumController extends AsyncNotifier<bool> {
+  static const _key = 'is_premium_active';
+
+  @override
+  Future<bool> build() async {
+    final preferences = await SharedPreferences.getInstance();
+    return preferences.getBool(_key) ?? false;
+  }
+
+  Future<void> setPremium(bool enabled) async {
+    final preferences = await SharedPreferences.getInstance();
+    await preferences.setBool(_key, enabled);
+    state = AsyncData(enabled);
+  }
+
+  Future<void> activatePremium() => setPremium(true);
+}
 
 class AppPreferencesController extends AsyncNotifier<AppPreferences> {
   @override
@@ -74,6 +96,16 @@ final selectedProfileProvider = FutureProvider<ChildProfile?>((ref) async {
 final wishlistItemsProvider = FutureProvider.family<List<WishlistItem>, int>(
   (ref, profileId) => ref.watch(wishlistRepositoryProvider).getItems(profileId),
 );
+
+final allWishlistItemsProvider =
+    FutureProvider<List<WishlistItem>>((ref) async {
+  final profiles = await ref.watch(profilesProvider.future);
+  final repository = ref.watch(wishlistRepositoryProvider);
+  final grouped = await Future.wait(
+    profiles.map((profile) => repository.getItems(profile.id)),
+  );
+  return grouped.expand((items) => items).toList(growable: false);
+});
 
 typedef WishlistTabFilter = ({int profileId, bool purchased});
 

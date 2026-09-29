@@ -487,6 +487,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Store location'**
   String get storeLocation;
+
+  /// No description provided for @premiumPaywallMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ve reached the free version limit (Max 2 profiles / 3 items). Unlock the full version for just PLN 5/month!'**
+  String get premiumPaywallMessage;
+
+  /// No description provided for @unlockPremium.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock Premium'**
+  String get unlockPremium;
+
+  /// No description provided for @backdoorPasswordPrompt.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the test password'**
+  String get backdoorPasswordPrompt;
+
+  /// No description provided for @invalidBackdoorPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Incorrect password.'**
+  String get invalidBackdoorPassword;
+
+  /// No description provided for @premiumUnlocked.
+  ///
+  /// In en, this message translates to:
+  /// **'Premium version unlocked!'**
+  String get premiumUnlocked;
 }
 
 class _AppLocalizationsDelegate

@@ -7,12 +7,14 @@ abstract interface class WishlistRepository {
     required String name,
     required int themeColor,
     required int iconIndex,
+    required bool isPremium,
   });
   Future<void> updateProfile(ChildProfile profile);
   Future<void> deleteProfile(ChildProfile profile);
   Future<List<WishlistItem>> getItems(int profileId);
   Future<int> addItem(
       {required int profileId,
+      required bool isPremium,
       required String title,
       required double price,
       required List<String> imagePaths,

@@ -98,9 +98,13 @@ class ProfileSelectionPage extends ConsumerWidget {
 
   Future<void> _add(BuildContext context, WidgetRef ref) async {
     final profiles = await ref.read(profilesProvider.future);
+    final isPremium = await ref.read(premiumProvider.future);
     if (!context.mounted) return;
-    if (profiles.length >= AppLimits.maxProfiles) {
-      await showPremiumRequiredDialog(context);
+    if (!isPremium && profiles.length >= AppLimits.maxProfiles) {
+      await showPremiumRequiredDialog(
+        context,
+        onUnlock: () => ref.read(premiumProvider.notifier).activatePremium(),
+      );
       return;
     }
     await _edit(context, ref, null);
@@ -241,6 +245,7 @@ class _ProfileEditorPageState extends ConsumerState<ProfileEditorPage> {
           name: name,
           themeColor: _themeColor,
           iconIndex: _iconIndex,
+          isPremium: await ref.read(premiumProvider.future),
         );
         await ref
             .read(appPreferencesProvider.notifier)
@@ -260,7 +265,10 @@ class _ProfileEditorPageState extends ConsumerState<ProfileEditorPage> {
       if (mounted) Navigator.pop(context, widget.profile == null);
     } on ProfileLimitException {
       if (mounted) {
-        await showPremiumRequiredDialog(context);
+        await showPremiumRequiredDialog(
+          context,
+          onUnlock: () => ref.read(premiumProvider.notifier).activatePremium(),
+        );
       }
     } finally {
       if (mounted) setState(() => _saving = false);

@@ -203,4 +203,20 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get storeLocation => 'Розташування магазину';
+
+  @override
+  String get premiumPaywallMessage =>
+      'Ви досягли ліміту безкоштовної версії (макс. 2 профілі / 3 товари). Розблокуйте повну версію лише за 5 PLN/місяць!';
+
+  @override
+  String get unlockPremium => 'Розблокувати Premium';
+
+  @override
+  String get backdoorPasswordPrompt => 'Введіть тестовий пароль';
+
+  @override
+  String get invalidBackdoorPassword => 'Неправильний пароль.';
+
+  @override
+  String get premiumUnlocked => 'Версію Premium розблоковано!';
 }

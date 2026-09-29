@@ -64,5 +64,10 @@
   "chooseFromGallery": "Wybierz z galerii",
   "itemOptions": "Więcej opcji",
   "deleteConfirmationTitle": "Czy na pewno?",
-  "storeLocation": "Lokalizacja sklepu"
+  "storeLocation": "Lokalizacja sklepu",
+  "premiumPaywallMessage": "Osiągnąłeś limit darmowej wersji (Max 2 profile / 3 przedmioty). Odblokuj pełną wersję za jedyne 5 zł/miesiąc!",
+  "unlockPremium": "Odblokuj Premium",
+  "backdoorPasswordPrompt": "Wpisz hasło testowe",
+  "invalidBackdoorPassword": "Nieprawidłowe hasło.",
+  "premiumUnlocked": "Wersja Premium odblokowana!"
 }

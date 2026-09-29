@@ -64,5 +64,10 @@
   "chooseFromGallery": "Elegir de la galería",
   "itemOptions": "Más opciones",
   "deleteConfirmationTitle": "¿Estás seguro?",
-  "storeLocation": "Ubicación de la tienda"
+  "storeLocation": "Ubicación de la tienda",
+  "premiumPaywallMessage": "Has alcanzado el límite de la versión gratuita (Máx. 2 perfiles / 3 artículos). ¡Desbloquea la versión completa por solo 5 PLN/mes!",
+  "unlockPremium": "Desbloquear Premium",
+  "backdoorPasswordPrompt": "Introduce la contraseña de prueba",
+  "invalidBackdoorPassword": "Contraseña incorrecta.",
+  "premiumUnlocked": "¡Versión Premium desbloqueada!"
 }

@@ -64,5 +64,10 @@
   "chooseFromGallery": "Вибрати з галереї",
   "itemOptions": "Інші параметри",
   "deleteConfirmationTitle": "Ви впевнені?",
-  "storeLocation": "Розташування магазину"
+  "storeLocation": "Розташування магазину",
+  "premiumPaywallMessage": "Ви досягли ліміту безкоштовної версії (макс. 2 профілі / 3 товари). Розблокуйте повну версію лише за 5 PLN/місяць!",
+  "unlockPremium": "Розблокувати Premium",
+  "backdoorPasswordPrompt": "Введіть тестовий пароль",
+  "invalidBackdoorPassword": "Неправильний пароль.",
+  "premiumUnlocked": "Версію Premium розблоковано!"
 }

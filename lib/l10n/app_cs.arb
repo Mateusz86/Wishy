@@ -64,5 +64,10 @@
   "chooseFromGallery": "Vybrat z galerie",
   "itemOptions": "Další možnosti",
   "deleteConfirmationTitle": "Opravdu chcete pokračovat?",
-  "storeLocation": "Umístění obchodu"
+  "storeLocation": "Umístění obchodu",
+  "premiumPaywallMessage": "Dosáhli jste limitu bezplatné verze (max. 2 profily / 3 položky). Odemkněte plnou verzi za pouhých 5 PLN/měsíc!",
+  "unlockPremium": "Odemknout Premium",
+  "backdoorPasswordPrompt": "Zadejte testovací heslo",
+  "invalidBackdoorPassword": "Nesprávné heslo.",
+  "premiumUnlocked": "Verze Premium odemčena!"
 }

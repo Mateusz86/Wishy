@@ -204,4 +204,20 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get storeLocation => 'Standort des Geschäfts';
+
+  @override
+  String get premiumPaywallMessage =>
+      'Du hast das Limit der kostenlosen Version erreicht (max. 2 Profile / 3 Artikel). Schalte die Vollversion für nur 5 PLN/Monat frei!';
+
+  @override
+  String get unlockPremium => 'Premium freischalten';
+
+  @override
+  String get backdoorPasswordPrompt => 'Testpasswort eingeben';
+
+  @override
+  String get invalidBackdoorPassword => 'Falsches Passwort.';
+
+  @override
+  String get premiumUnlocked => 'Premium-Version freigeschaltet!';
 }
