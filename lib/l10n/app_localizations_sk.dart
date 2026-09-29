@@ -194,4 +194,10 @@ class AppLocalizationsSk extends AppLocalizations {
 
   @override
   String get chooseFromGallery => 'Vybrať z galérie';
+
+  @override
+  String get itemOptions => 'Ďalšie možnosti';
+
+  @override
+  String get deleteConfirmationTitle => 'Naozaj chcete pokračovať?';
 }

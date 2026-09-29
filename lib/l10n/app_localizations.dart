@@ -469,6 +469,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Choose from gallery'**
   String get chooseFromGallery;
+
+  /// No description provided for @itemOptions.
+  ///
+  /// In en, this message translates to:
+  /// **'More options'**
+  String get itemOptions;
+
+  /// No description provided for @deleteConfirmationTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure?'**
+  String get deleteConfirmationTitle;
 }
 
 class _AppLocalizationsDelegate

@@ -61,5 +61,7 @@
   "emptyPurchased": "No purchased items yet.",
   "editItem": "Edit item",
   "chooseImageSource": "Add a photo",
-  "chooseFromGallery": "Choose from gallery"
+  "chooseFromGallery": "Choose from gallery",
+  "itemOptions": "More options",
+  "deleteConfirmationTitle": "Are you sure?"
 }

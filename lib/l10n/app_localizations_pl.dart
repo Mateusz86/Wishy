@@ -194,4 +194,10 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get chooseFromGallery => 'Wybierz z galerii';
+
+  @override
+  String get itemOptions => 'Więcej opcji';
+
+  @override
+  String get deleteConfirmationTitle => 'Czy na pewno?';
 }

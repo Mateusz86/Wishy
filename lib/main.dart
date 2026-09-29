@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'core/providers/app_providers.dart';
 import 'l10n/app_localizations.dart';
@@ -35,7 +36,19 @@ class WishyApp extends ConsumerWidget {
       ],
       supportedLocales: AppLocalizations.supportedLocales,
       theme: ThemeData(
-          colorSchemeSeed: const Color(0xFF4C8C72), useMaterial3: true),
+        useMaterial3: true,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xFF087F75),
+          brightness: Brightness.light,
+          surface: Colors.white,
+        ),
+        scaffoldBackgroundColor: Colors.grey[50],
+        textTheme: GoogleFonts.nunitoTextTheme(),
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Color(0xFFFAFAFA),
+          surfaceTintColor: Colors.transparent,
+        ),
+      ),
       home: const WishlistHomePage(),
     );
   }
