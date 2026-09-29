@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
@@ -16,6 +17,7 @@ import 'profile_selection_page.dart';
 import 'settings_page.dart';
 import 'premium_required_dialog.dart';
 import 'wishlist_item_details_page.dart';
+import 'wishy_gradient_background.dart';
 
 class WishlistHomePage extends ConsumerWidget {
   const WishlistHomePage({super.key});
@@ -54,7 +56,20 @@ class _ProfileWishlistPage extends ConsumerWidget {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          title: Text(context.loc.appTitle),
+          centerTitle: true,
+          title: Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.auto_awesome,
+                  color: Color(0xFF087F75), size: 22),
+              const SizedBox(width: 8),
+              Text(
+                context.loc.appTitle,
+                style: GoogleFonts.nunito(fontWeight: FontWeight.w900),
+              ),
+            ],
+          ),
           actions: [
             IconButton(
               tooltip: context.loc.selectProfile,
@@ -84,119 +99,121 @@ class _ProfileWishlistPage extends ConsumerWidget {
             ),
           ],
         ),
-        body: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
-              child: _BudgetPanel(
-                profileName: profile.name,
-                profileIconIndex: profile.iconIndex,
-                amount: profile.budget,
-                currency: currency,
-                onAdjust: (delta) => _adjustBudget(context, ref, delta < 0),
-                onQuickAdd: (amount) async {
-                  await ref
-                      .read(wishlistRepositoryProvider)
-                      .adjustBudget(profile.id, amount);
-                  ref.invalidate(profilesProvider);
-                  ref.invalidate(selectedProfileProvider);
-                },
+        body: WishyGradientBackground(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
+                child: _BudgetPanel(
+                  profileName: profile.name,
+                  profileIconIndex: profile.iconIndex,
+                  amount: profile.budget,
+                  currency: currency,
+                  onAdjust: (delta) => _adjustBudget(context, ref, delta < 0),
+                  onQuickAdd: (amount) async {
+                    await ref
+                        .read(wishlistRepositoryProvider)
+                        .adjustBudget(profile.id, amount);
+                    ref.invalidate(profilesProvider);
+                    ref.invalidate(selectedProfileProvider);
+                  },
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Row(children: [
-                Expanded(
-                    child: Text(context.loc.wishlist,
-                        style: Theme.of(context).textTheme.titleLarge)),
-                items.maybeWhen(
-                  data: (list) => IconButton(
-                    tooltip: context.loc.sortItems,
-                    onPressed: list.length < 2
-                        ? null
-                        : () => _sortItems(context, ref, list),
-                    icon: const Icon(Icons.sort),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Row(children: [
+                  Expanded(
+                      child: Text(context.loc.wishlist,
+                          style: Theme.of(context).textTheme.titleLarge)),
+                  items.maybeWhen(
+                    data: (list) => IconButton(
+                      tooltip: context.loc.sortItems,
+                      onPressed: list.length < 2
+                          ? null
+                          : () => _sortItems(context, ref, list),
+                      icon: const Icon(Icons.sort),
+                    ),
+                    orElse: () => const SizedBox.shrink(),
                   ),
-                  orElse: () => const SizedBox.shrink(),
-                ),
-                IconButton.filled(
-                  tooltip: context.loc.addItem,
-                  onPressed: items.valueOrNull == null
-                      ? null
-                      : () {
-                          if (items.valueOrNull!.length >=
-                              AppLimits.maxWishlistItems) {
-                            showPremiumRequiredDialog(context);
-                          } else {
-                            _addItem(context, ref);
-                          }
-                        },
-                  icon: const Icon(Icons.add),
-                ),
-              ]),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: const Color(0xFFE9EFEE),
-                  borderRadius: BorderRadius.circular(18),
-                ),
-                child: TabBar(
-                  dividerColor: Colors.transparent,
-                  indicatorSize: TabBarIndicatorSize.tab,
-                  indicatorPadding: const EdgeInsets.all(4),
-                  indicator: BoxDecoration(
-                    color: Theme.of(context).colorScheme.primary,
-                    borderRadius: BorderRadius.circular(14),
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Color(0x22000000),
-                        blurRadius: 8,
-                        offset: Offset(0, 3),
-                      ),
+                  IconButton.filled(
+                    tooltip: context.loc.addItem,
+                    onPressed: items.valueOrNull == null
+                        ? null
+                        : () {
+                            if (items.valueOrNull!.length >=
+                                AppLimits.maxWishlistItems) {
+                              showPremiumRequiredDialog(context);
+                            } else {
+                              _addItem(context, ref);
+                            }
+                          },
+                    icon: const Icon(Icons.add),
+                  ),
+                ]),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFE9EFEE),
+                    borderRadius: BorderRadius.circular(18),
+                  ),
+                  child: TabBar(
+                    dividerColor: Colors.transparent,
+                    indicatorSize: TabBarIndicatorSize.tab,
+                    indicatorPadding: const EdgeInsets.all(4),
+                    indicator: BoxDecoration(
+                      color: Theme.of(context).colorScheme.primary,
+                      borderRadius: BorderRadius.circular(14),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Color(0x22000000),
+                          blurRadius: 8,
+                          offset: Offset(0, 3),
+                        ),
+                      ],
+                    ),
+                    labelColor: Colors.white,
+                    unselectedLabelColor: const Color(0xFF53615F),
+                    labelStyle: const TextStyle(fontWeight: FontWeight.w800),
+                    tabs: [
+                      Tab(text: context.loc.toBuy),
+                      Tab(text: context.loc.purchased),
                     ],
                   ),
-                  labelColor: Colors.white,
-                  unselectedLabelColor: const Color(0xFF53615F),
-                  labelStyle: const TextStyle(fontWeight: FontWeight.w800),
-                  tabs: [
-                    Tab(text: context.loc.toBuy),
-                    Tab(text: context.loc.purchased),
-                  ],
                 ),
               ),
-            ),
-            Expanded(
-              child: TabBarView(children: [
-                _WishlistTab(
-                  profile: profile,
-                  currency: currency,
-                  purchased: false,
-                  onDelete: (item) => _deleteItem(context, ref, item),
-                  onEdit: (item) => _editItem(context, ref, item),
-                  onOpen: (item) =>
-                      Navigator.of(context).push(MaterialPageRoute(
-                    builder: (_) =>
-                        WishlistItemDetailsPage(item: item, currency: currency),
-                  )),
-                ),
-                _WishlistTab(
-                  profile: profile,
-                  currency: currency,
-                  purchased: true,
-                  onDelete: (item) => _deleteItem(context, ref, item),
-                  onEdit: (item) => _editItem(context, ref, item),
-                  onOpen: (item) =>
-                      Navigator.of(context).push(MaterialPageRoute(
-                    builder: (_) =>
-                        WishlistItemDetailsPage(item: item, currency: currency),
-                  )),
-                ),
-              ]),
-            ),
-            const _AdBannerPlaceholder(),
-          ],
+              Expanded(
+                child: TabBarView(children: [
+                  _WishlistTab(
+                    profile: profile,
+                    currency: currency,
+                    purchased: false,
+                    onDelete: (item) => _deleteItem(context, ref, item),
+                    onEdit: (item) => _editItem(context, ref, item),
+                    onOpen: (item) =>
+                        Navigator.of(context).push(MaterialPageRoute(
+                      builder: (_) => WishlistItemDetailsPage(
+                          item: item, currency: currency),
+                    )),
+                  ),
+                  _WishlistTab(
+                    profile: profile,
+                    currency: currency,
+                    purchased: true,
+                    onDelete: (item) => _deleteItem(context, ref, item),
+                    onEdit: (item) => _editItem(context, ref, item),
+                    onOpen: (item) =>
+                        Navigator.of(context).push(MaterialPageRoute(
+                      builder: (_) => WishlistItemDetailsPage(
+                          item: item, currency: currency),
+                    )),
+                  ),
+                ]),
+              ),
+              const _AdBannerPlaceholder(),
+            ],
+          ),
         ),
       ),
     );

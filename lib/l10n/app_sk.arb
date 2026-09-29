@@ -63,5 +63,6 @@
   "chooseImageSource": "Pridať fotografiu",
   "chooseFromGallery": "Vybrať z galérie",
   "itemOptions": "Ďalšie možnosti",
-  "deleteConfirmationTitle": "Naozaj chcete pokračovať?"
+  "deleteConfirmationTitle": "Naozaj chcete pokračovať?",
+  "storeLocation": "Poloha obchodu"
 }

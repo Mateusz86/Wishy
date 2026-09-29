@@ -200,4 +200,7 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get deleteConfirmationTitle => 'Czy na pewno?';
+
+  @override
+  String get storeLocation => 'Lokalizacja sklepu';
 }

@@ -200,4 +200,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get deleteConfirmationTitle => 'Opravdu chcete pokračovat?';
+
+  @override
+  String get storeLocation => 'Umístění obchodu';
 }

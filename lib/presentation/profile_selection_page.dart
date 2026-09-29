@@ -8,6 +8,7 @@ import '../data/repositories/local_wishlist_repository.dart';
 import '../domain/entities/child_profile.dart';
 import 'settings_page.dart';
 import 'premium_required_dialog.dart';
+import 'wishy_gradient_background.dart';
 
 const _profileColors = <Color>[
   Color(0xFF4C8C72),
@@ -51,45 +52,47 @@ class ProfileSelectionPage extends ConsumerWidget {
             ),
           ],
         ),
-        body: Column(
-          children: [
-            Expanded(
-              child: ref.watch(profilesProvider).when(
-                    loading: () =>
-                        const Center(child: CircularProgressIndicator()),
-                    error: (error, stack) =>
-                        Center(child: Text(context.loc.loadError)),
-                    data: (profiles) => profiles.isEmpty
-                        ? Center(child: Text(context.loc.noProfiles))
-                        : ListView.separated(
-                            padding: const EdgeInsets.all(16),
-                            itemCount: profiles.length,
-                            separatorBuilder: (context, index) =>
-                                const SizedBox(height: 8),
-                            itemBuilder: (context, index) => _ProfileTile(
-                              profile: profiles[index],
-                              onSelect: () =>
-                                  _select(context, ref, profiles[index]),
-                              onEdit: () =>
-                                  _edit(context, ref, profiles[index]),
-                              onDelete: () => _delete(
-                                  context, ref, profiles[index], profiles),
+        body: WishyGradientBackground(
+          child: Column(
+            children: [
+              Expanded(
+                child: ref.watch(profilesProvider).when(
+                      loading: () =>
+                          const Center(child: CircularProgressIndicator()),
+                      error: (error, stack) =>
+                          Center(child: Text(context.loc.loadError)),
+                      data: (profiles) => profiles.isEmpty
+                          ? Center(child: Text(context.loc.noProfiles))
+                          : ListView.separated(
+                              padding: const EdgeInsets.all(16),
+                              itemCount: profiles.length,
+                              separatorBuilder: (context, index) =>
+                                  const SizedBox(height: 8),
+                              itemBuilder: (context, index) => _ProfileTile(
+                                profile: profiles[index],
+                                onSelect: () =>
+                                    _select(context, ref, profiles[index]),
+                                onEdit: () =>
+                                    _edit(context, ref, profiles[index]),
+                                onDelete: () => _delete(
+                                    context, ref, profiles[index], profiles),
+                              ),
                             ),
-                          ),
+                    ),
+              ),
+              SafeArea(
+                minimum: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: FilledButton.icon(
+                    onPressed: () => _add(context, ref),
+                    icon: const Icon(Icons.person_add_alt_1),
+                    label: Text(context.loc.addProfile),
                   ),
-            ),
-            SafeArea(
-              minimum: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-              child: SizedBox(
-                width: double.infinity,
-                child: FilledButton.icon(
-                  onPressed: () => _add(context, ref),
-                  icon: const Icon(Icons.person_add_alt_1),
-                  label: Text(context.loc.addProfile),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       );
 
@@ -270,66 +273,68 @@ class _ProfileEditorPageState extends ConsumerState<ProfileEditorPage> {
             title: Text(widget.profile == null
                 ? context.loc.createProfile
                 : context.loc.editProfile)),
-        body: ListView(
-          padding: const EdgeInsets.all(16),
-          children: [
-            TextField(
-              controller: _nameController,
-              autofocus: true,
-              textCapitalization: TextCapitalization.words,
-              decoration: InputDecoration(labelText: context.loc.profileName),
-            ),
-            const SizedBox(height: 24),
-            Text(context.loc.chooseColor,
-                style: Theme.of(context).textTheme.titleMedium),
-            const SizedBox(height: 10),
-            Wrap(
-              spacing: 12,
-              runSpacing: 12,
-              children: [
-                for (final color in _profileColors)
-                  Semantics(
-                    button: true,
-                    selected: _themeColor == color.toARGB32(),
-                    label: color.toString(),
-                    child: InkResponse(
-                      onTap: () =>
-                          setState(() => _themeColor = color.toARGB32()),
-                      radius: 26,
-                      child: CircleAvatar(
-                        backgroundColor: color,
-                        child: _themeColor == color.toARGB32()
-                            ? const Icon(Icons.check, color: Colors.white)
-                            : null,
+        body: WishyGradientBackground(
+          child: ListView(
+            padding: const EdgeInsets.all(16),
+            children: [
+              TextField(
+                controller: _nameController,
+                autofocus: true,
+                textCapitalization: TextCapitalization.words,
+                decoration: InputDecoration(labelText: context.loc.profileName),
+              ),
+              const SizedBox(height: 24),
+              Text(context.loc.chooseColor,
+                  style: Theme.of(context).textTheme.titleMedium),
+              const SizedBox(height: 10),
+              Wrap(
+                spacing: 12,
+                runSpacing: 12,
+                children: [
+                  for (final color in _profileColors)
+                    Semantics(
+                      button: true,
+                      selected: _themeColor == color.toARGB32(),
+                      label: color.toString(),
+                      child: InkResponse(
+                        onTap: () =>
+                            setState(() => _themeColor = color.toARGB32()),
+                        radius: 26,
+                        child: CircleAvatar(
+                          backgroundColor: color,
+                          child: _themeColor == color.toARGB32()
+                              ? const Icon(Icons.check, color: Colors.white)
+                              : null,
+                        ),
                       ),
                     ),
-                  ),
-              ],
-            ),
-            const SizedBox(height: 24),
-            Text(context.loc.chooseIcon,
-                style: Theme.of(context).textTheme.titleMedium),
-            const SizedBox(height: 10),
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: [
-                for (var index = 0; index < _profileIcons.length; index++)
-                  ChoiceChip(
-                    label: Icon(_profileIcons[index]),
-                    selected: _iconIndex == index,
-                    onSelected: (_) => setState(() => _iconIndex = index),
-                  ),
-              ],
-            ),
-            const SizedBox(height: 28),
-            FilledButton(
-              onPressed: _saving ? null : _save,
-              child: _saving
-                  ? const CircularProgressIndicator()
-                  : Text(context.loc.save),
-            ),
-          ],
+                ],
+              ),
+              const SizedBox(height: 24),
+              Text(context.loc.chooseIcon,
+                  style: Theme.of(context).textTheme.titleMedium),
+              const SizedBox(height: 10),
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: [
+                  for (var index = 0; index < _profileIcons.length; index++)
+                    ChoiceChip(
+                      label: Icon(_profileIcons[index]),
+                      selected: _iconIndex == index,
+                      onSelected: (_) => setState(() => _iconIndex = index),
+                    ),
+                ],
+              ),
+              const SizedBox(height: 28),
+              FilledButton(
+                onPressed: _saving ? null : _save,
+                child: _saving
+                    ? const CircularProgressIndicator()
+                    : Text(context.loc.save),
+              ),
+            ],
+          ),
         ),
       );
 }

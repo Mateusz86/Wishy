@@ -200,4 +200,7 @@ class AppLocalizationsSk extends AppLocalizations {
 
   @override
   String get deleteConfirmationTitle => 'Naozaj chcete pokračovať?';
+
+  @override
+  String get storeLocation => 'Poloha obchodu';
 }

@@ -200,4 +200,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get deleteConfirmationTitle => 'Are you sure?';
+
+  @override
+  String get storeLocation => 'Store location';
 }

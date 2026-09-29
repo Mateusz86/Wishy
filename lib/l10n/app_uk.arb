@@ -63,5 +63,6 @@
   "chooseImageSource": "Додати фото",
   "chooseFromGallery": "Вибрати з галереї",
   "itemOptions": "Інші параметри",
-  "deleteConfirmationTitle": "Ви впевнені?"
+  "deleteConfirmationTitle": "Ви впевнені?",
+  "storeLocation": "Розташування магазину"
 }

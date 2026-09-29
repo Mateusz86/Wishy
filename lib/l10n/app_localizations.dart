@@ -481,6 +481,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Are you sure?'**
   String get deleteConfirmationTitle;
+
+  /// No description provided for @storeLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Store location'**
+  String get storeLocation;
 }
 
 class _AppLocalizationsDelegate

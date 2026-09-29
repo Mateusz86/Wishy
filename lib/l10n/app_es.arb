@@ -63,5 +63,6 @@
   "chooseImageSource": "Añadir una foto",
   "chooseFromGallery": "Elegir de la galería",
   "itemOptions": "Más opciones",
-  "deleteConfirmationTitle": "¿Estás seguro?"
+  "deleteConfirmationTitle": "¿Estás seguro?",
+  "storeLocation": "Ubicación de la tienda"
 }

@@ -6,6 +6,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../core/localization/context_localization.dart';
 import '../domain/entities/wishlist_item.dart';
+import 'wishy_gradient_background.dart';
 
 class WishlistItemDetailsPage extends StatefulWidget {
   const WishlistItemDetailsPage(
@@ -42,63 +43,222 @@ class _WishlistItemDetailsPageState extends State<WishlistItemDetailsPage> {
   @override
   Widget build(BuildContext context) {
     final item = widget.item;
+    final theme = Theme.of(context);
     return Scaffold(
-      appBar: AppBar(title: Text(item.title)),
-      body: ListView(padding: const EdgeInsets.all(16), children: [
-        if (item.imagePaths.isNotEmpty) ...[
-          SizedBox(
-            height: 300,
-            child: PageView.builder(
-              itemCount: item.imagePaths.length,
-              onPageChanged: (index) => setState(() => _page = index),
-              itemBuilder: (context, index) => ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: Image.file(File(item.imagePaths[index]),
-                    fit: BoxFit.contain,
-                    errorBuilder: (_, __, ___) => const Center(
-                        child: Icon(Icons.image_not_supported_outlined,
-                            size: 48))),
+      backgroundColor: Colors.transparent,
+      body: WishyGradientBackground(
+        child: CustomScrollView(
+          slivers: [
+            SliverAppBar(
+              pinned: true,
+              expandedHeight: 350,
+              backgroundColor: Colors.transparent,
+              surfaceTintColor: Colors.transparent,
+              elevation: 0,
+              leadingWidth: 68,
+              leading: Padding(
+                padding: const EdgeInsets.only(left: 12, top: 4, bottom: 4),
+                child: IconButton.filled(
+                  tooltip: MaterialLocalizations.of(context).backButtonTooltip,
+                  style: IconButton.styleFrom(
+                    foregroundColor: const Color(0xFF173D39),
+                    backgroundColor: Colors.white.withValues(alpha: .9),
+                  ),
+                  onPressed: () => Navigator.of(context).maybePop(),
+                  icon: const Icon(Icons.arrow_back_rounded),
+                ),
+              ),
+              flexibleSpace: FlexibleSpaceBar(
+                background: _PhotoHero(
+                  item: item,
+                  currentPage: _page,
+                  onPageChanged: (page) => setState(() => _page = page),
+                ),
+              ),
+            ),
+            SliverToBoxAdapter(
+              child: Transform.translate(
+                offset: const Offset(0, -30),
+                child: Container(
+                  width: double.infinity,
+                  clipBehavior: Clip.antiAlias,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: const BorderRadius.vertical(
+                      top: Radius.circular(32),
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: .1),
+                        blurRadius: 24,
+                        offset: const Offset(0, -5),
+                      ),
+                    ],
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(24, 34, 24, 40),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          item.title,
+                          style: theme.textTheme.headlineMedium?.copyWith(
+                            color: const Color(0xFF183330),
+                            fontWeight: FontWeight.w900,
+                            height: 1.08,
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        Text(
+                          widget.currency.format(item.price),
+                          style: theme.textTheme.headlineSmall?.copyWith(
+                            color: theme.colorScheme.primary,
+                            fontWeight: FontWeight.w900,
+                          ),
+                        ),
+                        if (item.description?.isNotEmpty == true) ...[
+                          const SizedBox(height: 24),
+                          Text(
+                            context.loc.description,
+                            style: theme.textTheme.labelLarge?.copyWith(
+                              color: theme.colorScheme.onSurfaceVariant,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            item.description!,
+                            style: theme.textTheme.bodyLarge?.copyWith(
+                              height: 1.5,
+                              color: const Color(0xFF3F504D),
+                            ),
+                          ),
+                        ],
+                        if (item.storeLink?.isNotEmpty == true) ...[
+                          const SizedBox(height: 28),
+                          SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton.icon(
+                              onPressed: _openStore,
+                              icon: const Icon(Icons.shopping_bag_outlined),
+                              label: Text(context.loc.openStore),
+                              style: ElevatedButton.styleFrom(
+                                elevation: 0,
+                                minimumSize: const Size.fromHeight(56),
+                                foregroundColor: Colors.white,
+                                backgroundColor: theme.colorScheme.primary,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                                textStyle: const TextStyle(
+                                  fontWeight: FontWeight.w800,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                        if (item.latitude != null &&
+                            item.longitude != null) ...[
+                          const SizedBox(height: 12),
+                          SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton.icon(
+                              onPressed: _openMap,
+                              icon: const Icon(Icons.location_on_outlined),
+                              label: Text(context.loc.storeLocation),
+                              style: ElevatedButton.styleFrom(
+                                elevation: 0,
+                                minimumSize: const Size.fromHeight(56),
+                                foregroundColor: theme.colorScheme.primary,
+                                backgroundColor: const Color(0xFFE9F5F2),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                                textStyle: const TextStyle(
+                                  fontWeight: FontWeight.w800,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _PhotoHero extends StatelessWidget {
+  const _PhotoHero({
+    required this.item,
+    required this.currentPage,
+    required this.onPageChanged,
+  });
+
+  final WishlistItem item;
+  final int currentPage;
+  final ValueChanged<int> onPageChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    if (item.imagePaths.isEmpty) {
+      return const ColoredBox(
+        color: Color(0xFFDCEFEB),
+        child: Center(
+          child: Icon(Icons.toys_outlined, size: 88, color: Color(0xFF238B7F)),
+        ),
+      );
+    }
+
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        PageView.builder(
+          itemCount: item.imagePaths.length,
+          onPageChanged: onPageChanged,
+          itemBuilder: (context, index) => Image.file(
+            File(item.imagePaths[index]),
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) => const ColoredBox(
+              color: Color(0xFFDCEFEB),
+              child: Center(
+                child: Icon(Icons.image_not_supported_outlined,
+                    size: 64, color: Color(0xFF238B7F)),
               ),
             ),
           ),
-          if (item.imagePaths.length > 1)
-            Padding(
-              padding: const EdgeInsets.only(top: 8),
-              child:
-                  Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+        ),
+        if (item.imagePaths.length > 1)
+          Positioned(
+            bottom: 52,
+            left: 0,
+            right: 0,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
                 for (var index = 0; index < item.imagePaths.length; index++)
-                  Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 3),
-                      child: Icon(Icons.circle,
-                          size: 9,
-                          color: index == _page
-                              ? Theme.of(context).colorScheme.primary
-                              : Theme.of(context).colorScheme.outlineVariant)),
-              ]),
+                  AnimatedContainer(
+                    duration: const Duration(milliseconds: 180),
+                    width: index == currentPage ? 20 : 7,
+                    height: 7,
+                    margin: const EdgeInsets.symmetric(horizontal: 3),
+                    decoration: BoxDecoration(
+                      color: index == currentPage
+                          ? Colors.white
+                          : Colors.white.withValues(alpha: .55),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+              ],
             ),
-        ],
-        const SizedBox(height: 16),
-        Text(widget.currency.format(item.price),
-            style: Theme.of(context).textTheme.headlineSmall),
-        if (item.description?.isNotEmpty == true) ...[
-          const SizedBox(height: 12),
-          Text(item.description!),
-        ],
-        if (item.storeLink?.isNotEmpty == true)
-          ListTile(
-              contentPadding: EdgeInsets.zero,
-              leading: const Icon(Icons.open_in_new),
-              title: Text(context.loc.openStore),
-              subtitle: Text(item.storeLink!,
-                  maxLines: 1, overflow: TextOverflow.ellipsis),
-              onTap: _openStore),
-        if (item.latitude != null && item.longitude != null)
-          ListTile(
-              contentPadding: EdgeInsets.zero,
-              leading: const Icon(Icons.map_outlined),
-              title: Text(context.loc.openMap),
-              onTap: _openMap),
-      ]),
+          ),
+      ],
     );
   }
 }

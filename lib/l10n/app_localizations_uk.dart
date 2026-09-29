@@ -200,4 +200,7 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get deleteConfirmationTitle => 'Ви впевнені?';
+
+  @override
+  String get storeLocation => 'Розташування магазину';
 }
