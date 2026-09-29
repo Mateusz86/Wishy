@@ -3,7 +3,9 @@
 - Architecture: Clean Architecture with Repository Pattern.
 - State Management: Riverpod.
 - Local DB: Isar (or sqflite).
-- Strict Rule: Free tier limits - Max 1 ChildProfile, Max 4 WishlistItems.
+- Strict Rule: Free tier limits - Max 3 ChildProfiles, Max 4 WishlistItems.
+- Each ChildProfile owns an independent budget and personalized theme color/icon.
+- Persist selected language, currency, and active profile locally.
 - Images: Save via path_provider, store ONLY local file path as String in DB.
 - UI: Use ConsumerWidget for Riverpod integration.
 - Formatting: Never hardcode strings or currency. Use context.loc and locale-aware formatters.
