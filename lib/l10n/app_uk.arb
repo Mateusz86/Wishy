@@ -61,5 +61,8 @@
   "emptyPurchased": "Ще немає придбаних товарів.",
   "editItem": "Редагувати товар",
   "chooseImageSource": "Додати фото",
-  "chooseFromGallery": "Вибрати з галереї"
+  "chooseFromGallery": "Вибрати з галереї",
+  "itemOptions": "Інші параметри",
+  "deleteConfirmationTitle": "Ви впевнені?",
+  "storeLocation": "Розташування магазину"
 }

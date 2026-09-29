@@ -194,4 +194,13 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get chooseFromGallery => 'Vybrat z galerie';
+
+  @override
+  String get itemOptions => 'Další možnosti';
+
+  @override
+  String get deleteConfirmationTitle => 'Opravdu chcete pokračovat?';
+
+  @override
+  String get storeLocation => 'Umístění obchodu';
 }

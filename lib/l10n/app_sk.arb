@@ -61,5 +61,8 @@
   "emptyPurchased": "Zatiaľ žiadne kúpené položky.",
   "editItem": "Upraviť položku",
   "chooseImageSource": "Pridať fotografiu",
-  "chooseFromGallery": "Vybrať z galérie"
+  "chooseFromGallery": "Vybrať z galérie",
+  "itemOptions": "Ďalšie možnosti",
+  "deleteConfirmationTitle": "Naozaj chcete pokračovať?",
+  "storeLocation": "Poloha obchodu"
 }

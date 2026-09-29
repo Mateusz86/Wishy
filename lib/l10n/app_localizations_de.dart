@@ -195,4 +195,13 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get chooseFromGallery => 'Aus Galerie auswählen';
+
+  @override
+  String get itemOptions => 'Weitere Optionen';
+
+  @override
+  String get deleteConfirmationTitle => 'Bist du sicher?';
+
+  @override
+  String get storeLocation => 'Standort des Geschäfts';
 }

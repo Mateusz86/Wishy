@@ -61,5 +61,8 @@
   "emptyPurchased": "Brak kupionych produktów.",
   "editItem": "Edytuj produkt",
   "chooseImageSource": "Dodaj zdjęcie",
-  "chooseFromGallery": "Wybierz z galerii"
+  "chooseFromGallery": "Wybierz z galerii",
+  "itemOptions": "Więcej opcji",
+  "deleteConfirmationTitle": "Czy na pewno?",
+  "storeLocation": "Lokalizacja sklepu"
 }

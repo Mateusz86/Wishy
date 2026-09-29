@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
@@ -16,6 +17,7 @@ import 'profile_selection_page.dart';
 import 'settings_page.dart';
 import 'premium_required_dialog.dart';
 import 'wishlist_item_details_page.dart';
+import 'wishy_gradient_background.dart';
 
 class WishlistHomePage extends ConsumerWidget {
   const WishlistHomePage({super.key});
@@ -54,19 +56,18 @@ class _ProfileWishlistPage extends ConsumerWidget {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          leading: Padding(
-            padding: const EdgeInsets.all(8),
-            child: CircleAvatar(
-              backgroundColor: Color(profile.themeColor),
-              child: Icon(profileIcon(profile.iconIndex), color: Colors.white),
-            ),
-          ),
-          title: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          centerTitle: true,
+          title: Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(profile.name, maxLines: 1, overflow: TextOverflow.ellipsis),
-              Text(context.loc.appTitle,
-                  style: Theme.of(context).textTheme.labelSmall),
+              const Icon(Icons.auto_awesome,
+                  color: Color(0xFF087F75), size: 22),
+              const SizedBox(width: 8),
+              Text(
+                context.loc.appTitle,
+                style: GoogleFonts.nunito(fontWeight: FontWeight.w900),
+              ),
             ],
           ),
           actions: [
@@ -98,89 +99,121 @@ class _ProfileWishlistPage extends ConsumerWidget {
             ),
           ],
         ),
-        body: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
-              child: _BudgetPanel(
-                amount: profile.budget,
-                currency: currency,
-                onAdjust: (delta) => _adjustBudget(context, ref, delta < 0),
-                onQuickAdd: (amount) async {
-                  await ref
-                      .read(wishlistRepositoryProvider)
-                      .adjustBudget(profile.id, amount);
-                  ref.invalidate(profilesProvider);
-                  ref.invalidate(selectedProfileProvider);
-                },
+        body: WishyGradientBackground(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
+                child: _BudgetPanel(
+                  profileName: profile.name,
+                  profileIconIndex: profile.iconIndex,
+                  amount: profile.budget,
+                  currency: currency,
+                  onAdjust: (delta) => _adjustBudget(context, ref, delta < 0),
+                  onQuickAdd: (amount) async {
+                    await ref
+                        .read(wishlistRepositoryProvider)
+                        .adjustBudget(profile.id, amount);
+                    ref.invalidate(profilesProvider);
+                    ref.invalidate(selectedProfileProvider);
+                  },
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Row(children: [
-                Expanded(
-                    child: Text(context.loc.wishlist,
-                        style: Theme.of(context).textTheme.titleLarge)),
-                items.maybeWhen(
-                  data: (list) => IconButton(
-                    tooltip: context.loc.sortItems,
-                    onPressed: list.length < 2
-                        ? null
-                        : () => _sortItems(context, ref, list),
-                    icon: const Icon(Icons.sort),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Row(children: [
+                  Expanded(
+                      child: Text(context.loc.wishlist,
+                          style: Theme.of(context).textTheme.titleLarge)),
+                  items.maybeWhen(
+                    data: (list) => IconButton(
+                      tooltip: context.loc.sortItems,
+                      onPressed: list.length < 2
+                          ? null
+                          : () => _sortItems(context, ref, list),
+                      icon: const Icon(Icons.sort),
+                    ),
+                    orElse: () => const SizedBox.shrink(),
                   ),
-                  orElse: () => const SizedBox.shrink(),
+                  IconButton.filled(
+                    tooltip: context.loc.addItem,
+                    onPressed: items.valueOrNull == null
+                        ? null
+                        : () {
+                            if (items.valueOrNull!.length >=
+                                AppLimits.maxWishlistItems) {
+                              showPremiumRequiredDialog(context);
+                            } else {
+                              _addItem(context, ref);
+                            }
+                          },
+                    icon: const Icon(Icons.add),
+                  ),
+                ]),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFE9EFEE),
+                    borderRadius: BorderRadius.circular(18),
+                  ),
+                  child: TabBar(
+                    dividerColor: Colors.transparent,
+                    indicatorSize: TabBarIndicatorSize.tab,
+                    indicatorPadding: const EdgeInsets.all(4),
+                    indicator: BoxDecoration(
+                      color: Theme.of(context).colorScheme.primary,
+                      borderRadius: BorderRadius.circular(14),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Color(0x22000000),
+                          blurRadius: 8,
+                          offset: Offset(0, 3),
+                        ),
+                      ],
+                    ),
+                    labelColor: Colors.white,
+                    unselectedLabelColor: const Color(0xFF53615F),
+                    labelStyle: const TextStyle(fontWeight: FontWeight.w800),
+                    tabs: [
+                      Tab(text: context.loc.toBuy),
+                      Tab(text: context.loc.purchased),
+                    ],
+                  ),
                 ),
-                IconButton.filled(
-                  tooltip: context.loc.addItem,
-                  onPressed: items.valueOrNull == null
-                      ? null
-                      : () {
-                          if (items.valueOrNull!.length >=
-                              AppLimits.maxWishlistItems) {
-                            showPremiumRequiredDialog(context);
-                          } else {
-                            _addItem(context, ref);
-                          }
-                        },
-                  icon: const Icon(Icons.add),
-                ),
-              ]),
-            ),
-            TabBar(tabs: [
-              Tab(text: context.loc.toBuy),
-              Tab(text: context.loc.purchased),
-            ]),
-            Expanded(
-              child: TabBarView(children: [
-                _WishlistTab(
-                  profile: profile,
-                  currency: currency,
-                  purchased: false,
-                  onDelete: (item) => _deleteItem(context, ref, item),
-                  onEdit: (item) => _editItem(context, ref, item),
-                  onOpen: (item) =>
-                      Navigator.of(context).push(MaterialPageRoute(
-                    builder: (_) =>
-                        WishlistItemDetailsPage(item: item, currency: currency),
-                  )),
-                ),
-                _WishlistTab(
-                  profile: profile,
-                  currency: currency,
-                  purchased: true,
-                  onDelete: (item) => _deleteItem(context, ref, item),
-                  onEdit: (item) => _editItem(context, ref, item),
-                  onOpen: (item) =>
-                      Navigator.of(context).push(MaterialPageRoute(
-                    builder: (_) =>
-                        WishlistItemDetailsPage(item: item, currency: currency),
-                  )),
-                ),
-              ]),
-            ),
-            const _AdBannerPlaceholder(),
-          ],
+              ),
+              Expanded(
+                child: TabBarView(children: [
+                  _WishlistTab(
+                    profile: profile,
+                    currency: currency,
+                    purchased: false,
+                    onDelete: (item) => _deleteItem(context, ref, item),
+                    onEdit: (item) => _editItem(context, ref, item),
+                    onOpen: (item) =>
+                        Navigator.of(context).push(MaterialPageRoute(
+                      builder: (_) => WishlistItemDetailsPage(
+                          item: item, currency: currency),
+                    )),
+                  ),
+                  _WishlistTab(
+                    profile: profile,
+                    currency: currency,
+                    purchased: true,
+                    onDelete: (item) => _deleteItem(context, ref, item),
+                    onEdit: (item) => _editItem(context, ref, item),
+                    onOpen: (item) =>
+                        Navigator.of(context).push(MaterialPageRoute(
+                      builder: (_) => WishlistItemDetailsPage(
+                          item: item, currency: currency),
+                    )),
+                  ),
+                ]),
+              ),
+              const _AdBannerPlaceholder(),
+            ],
+          ),
         ),
       ),
     );
@@ -286,6 +319,7 @@ class _ProfileWishlistPage extends ConsumerWidget {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (_) => AlertDialog(
+        title: Text(context.loc.deleteConfirmationTitle),
         content: Text(context.loc.deleteConfirmation(item.title)),
         actions: [
           TextButton(
@@ -313,56 +347,140 @@ class _ProfileWishlistPage extends ConsumerWidget {
 
 class _BudgetPanel extends StatelessWidget {
   const _BudgetPanel(
-      {required this.amount,
+      {required this.profileName,
+      required this.profileIconIndex,
+      required this.amount,
       required this.currency,
       required this.onAdjust,
       required this.onQuickAdd});
 
+  final String profileName;
+  final int profileIconIndex;
   final double amount;
   final NumberFormat currency;
   final ValueChanged<double> onAdjust;
   final ValueChanged<double> onQuickAdd;
 
   @override
-  Widget build(BuildContext context) => Card(
-        margin: EdgeInsets.zero,
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(context.loc.currentBudget,
-                style: Theme.of(context).textTheme.labelLarge),
-            const SizedBox(height: 4),
-            Text(currency.format(amount),
-                style: Theme.of(context).textTheme.headlineMedium),
-            const SizedBox(height: 8),
-            Row(children: [
-              FilledButton.tonalIcon(
+  Widget build(BuildContext context) {
+    final primary = Theme.of(context).colorScheme.primary;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(22),
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              colors: [Color(0xFF087F75), Color(0xFF42C9A5)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            borderRadius: BorderRadius.circular(24),
+            boxShadow: const [
+              BoxShadow(
+                color: Color(0x33087F75),
+                blurRadius: 22,
+                offset: Offset(0, 10),
+              ),
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(children: [
+                CircleAvatar(
+                  radius: 22,
+                  backgroundColor: Colors.white.withValues(alpha: .2),
+                  child:
+                      Icon(profileIcon(profileIconIndex), color: Colors.white),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    profileName,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                ),
+                const Icon(Icons.credit_card_rounded,
+                    color: Color(0xCCFFFFFF), size: 26),
+              ]),
+              const SizedBox(height: 22),
+              Text(
+                context.loc.currentBudget,
+                style: const TextStyle(
+                  color: Color(0xD9FFFFFF),
+                  fontSize: 13,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              const SizedBox(height: 2),
+              Text(
+                currency.format(amount),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 36,
+                  height: 1.1,
+                  fontWeight: FontWeight.w900,
+                ),
+              ),
+              const SizedBox(height: 14),
+              Row(children: [
+                TextButton.icon(
                   onPressed: () => onAdjust(1),
-                  icon: const Icon(Icons.add),
-                  label: Text(context.loc.addFunds)),
-              const SizedBox(width: 8),
-              OutlinedButton.icon(
+                  style: TextButton.styleFrom(foregroundColor: Colors.white),
+                  icon: const Icon(Icons.add_circle_outline),
+                  label: Text(context.loc.addFunds),
+                ),
+                const SizedBox(width: 8),
+                TextButton.icon(
                   onPressed: () => onAdjust(-1),
-                  icon: const Icon(Icons.remove),
-                  label: Text(context.loc.subtractFunds)),
-            ]),
-            const SizedBox(height: 10),
-            Wrap(
-              spacing: 8,
-              runSpacing: 6,
+                  style: TextButton.styleFrom(foregroundColor: Colors.white),
+                  icon: const Icon(Icons.remove_circle_outline),
+                  label: Text(context.loc.subtractFunds),
+                ),
+              ]),
+            ],
+          ),
+        ),
+        const SizedBox(height: 12),
+        SizedBox(
+          height: 42,
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
               children: [
                 for (final amount in [5.0, 10.0, 50.0, 100.0])
-                  ActionChip(
-                    avatar: const Icon(Icons.add, size: 16),
-                    label: Text(currency.format(amount)),
-                    onPressed: () => onQuickAdd(amount),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 8),
+                    child: ActionChip(
+                      tooltip: context.loc.quickAddFunds,
+                      shape: const StadiumBorder(),
+                      side: BorderSide.none,
+                      backgroundColor: primary.withValues(alpha: .1),
+                      label: Text(
+                        '+${currency.format(amount)}',
+                        style: TextStyle(
+                            color: primary, fontWeight: FontWeight.w800),
+                      ),
+                      onPressed: () => onQuickAdd(amount),
+                    ),
                   ),
               ],
             ),
-          ]),
+          ),
         ),
-      );
+      ],
+    );
+  }
 }
 
 class _WishlistTab extends ConsumerWidget {
@@ -436,6 +554,8 @@ class _WishlistTab extends ConsumerWidget {
   }
 }
 
+enum _WishlistItemAction { edit, delete }
+
 class _WishlistItemTile extends ConsumerWidget {
   const _WishlistItemTile(
       {super.key,
@@ -462,113 +582,175 @@ class _WishlistItemTile extends ConsumerWidget {
     ));
     final progress =
         item.price == 0 ? 1.0 : (budget / item.price).clamp(0.0, 1.0);
+    final theme = Theme.of(context);
     return Card(
-      margin: const EdgeInsets.only(bottom: 10),
-      color: item.isPurchased
-          ? Theme.of(context).colorScheme.surfaceContainerHighest
-          : null,
+      margin: const EdgeInsets.only(bottom: 12),
+      color: item.isPurchased ? const Color(0xFFFCFDFD) : Colors.white,
+      elevation: 2,
+      shadowColor: Colors.black12,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: onOpen,
-        borderRadius: BorderRadius.circular(8),
         child: Padding(
-          padding: const EdgeInsets.all(12),
-          child: Row(children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(6),
-              child: SizedBox(
-                width: 64,
-                height: 64,
-                child: item.imagePaths.isNotEmpty &&
-                        File(item.imagePaths.first).existsSync()
-                    ? Image.file(File(item.imagePaths.first), fit: BoxFit.cover)
-                    : const ColoredBox(
-                        color: Color(0xFFE8EFEA),
-                        child: Icon(Icons.toys_outlined)),
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                  Text(item.title,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+          padding: const EdgeInsets.all(14),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: SizedBox(
+                      width: 76,
+                      height: 76,
+                      child: item.imagePaths.isNotEmpty &&
+                              File(item.imagePaths.first).existsSync()
+                          ? Image.file(File(item.imagePaths.first),
+                              fit: BoxFit.cover)
+                          : const ColoredBox(
+                              color: Color(0xFFEDF3F2),
+                              child: Icon(Icons.toys_outlined, size: 30)),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          item.title,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.w800,
                             decoration: item.isPurchased
                                 ? TextDecoration.lineThrough
                                 : null,
                             color: item.isPurchased
-                                ? Theme.of(context).colorScheme.onSurfaceVariant
+                                ? theme.colorScheme.onSurfaceVariant
                                 : null,
-                          )),
-                  Text(currency.format(item.price)),
-                  if (item.description?.isNotEmpty == true)
-                    Text(item.description!,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: Theme.of(context).textTheme.bodySmall),
-                  const SizedBox(height: 6),
-                  LinearProgressIndicator(value: progress),
-                  const SizedBox(height: 3),
-                  Text(
-                      context.loc.progressLabel(
-                          currency.format(budget), currency.format(item.price)),
-                      style: Theme.of(context).textTheme.bodySmall),
-                  const SizedBox(height: 8),
-                  SizedBox(
-                    width: double.infinity,
-                    child: FilledButton.icon(
-                      onPressed: item.isPurchased || purchase.isLoading
-                          ? null
-                          : () async {
-                              try {
-                                await ref
-                                    .read(purchaseControllerProvider((
-                                      profileId: profileId,
-                                      itemId: item.id!,
-                                    )).notifier)
-                                    .purchase();
-                              } on InsufficientBudgetException {
-                                if (context.mounted) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content:
-                                          Text(context.loc.insufficientFunds),
-                                    ),
-                                  );
-                                }
-                              } catch (_) {
-                                if (context.mounted) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text(context.loc.loadError),
-                                    ),
-                                  );
-                                }
-                              }
-                            },
-                      icon: Icon(item.isPurchased
-                          ? Icons.check_circle_outline
-                          : Icons.shopping_bag_outlined),
-                      label: Text(item.isPurchased
-                          ? context.loc.purchaseCompleted
-                          : context.loc.purchaseItem),
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          currency.format(item.price),
+                          style: theme.textTheme.titleSmall?.copyWith(
+                            color: theme.colorScheme.primary,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                        if (item.description?.isNotEmpty == true) ...[
+                          const SizedBox(height: 3),
+                          Text(
+                            item.description!,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: theme.colorScheme.onSurfaceVariant,
+                            ),
+                          ),
+                        ],
+                      ],
                     ),
                   ),
-                ])),
-            Column(mainAxisSize: MainAxisSize.min, children: [
-              IconButton(
-                  tooltip: context.loc.editItem,
-                  onPressed: onEdit,
-                  icon: const Icon(Icons.edit_outlined)),
-              IconButton(
-                  tooltip: context.loc.delete,
-                  onPressed: onDelete,
-                  icon: const Icon(Icons.delete_outline)),
-              const Icon(Icons.drag_handle),
-            ]),
-          ]),
+                  PopupMenuButton<_WishlistItemAction>(
+                    tooltip: context.loc.itemOptions,
+                    icon: const Icon(Icons.more_vert),
+                    onSelected: (action) {
+                      switch (action) {
+                        case _WishlistItemAction.edit:
+                          onEdit();
+                        case _WishlistItemAction.delete:
+                          onDelete();
+                      }
+                    },
+                    itemBuilder: (context) => [
+                      PopupMenuItem(
+                        value: _WishlistItemAction.edit,
+                        child: Row(children: [
+                          const Icon(Icons.edit_outlined, size: 20),
+                          const SizedBox(width: 10),
+                          Text(context.loc.editItem),
+                        ]),
+                      ),
+                      PopupMenuItem(
+                        value: _WishlistItemAction.delete,
+                        child: Row(children: [
+                          const Icon(Icons.delete_outline, size: 20),
+                          const SizedBox(width: 10),
+                          Text(context.loc.delete),
+                        ]),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              const SizedBox(height: 14),
+              LinearProgressIndicator(
+                value: progress,
+                minHeight: 12,
+                borderRadius: BorderRadius.circular(8),
+                color: const Color(0xFF12A88D),
+                backgroundColor: const Color(0xFFEAF0EF),
+              ),
+              const SizedBox(height: 6),
+              Text(
+                context.loc.progressLabel(
+                    currency.format(budget), currency.format(item.price)),
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              const SizedBox(height: 12),
+              SizedBox(
+                width: double.infinity,
+                child: FilledButton.icon(
+                  style: FilledButton.styleFrom(
+                    minimumSize: const Size.fromHeight(48),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14)),
+                  ),
+                  onPressed: item.isPurchased || purchase.isLoading
+                      ? null
+                      : () async {
+                          try {
+                            await ref
+                                .read(purchaseControllerProvider((
+                                  profileId: profileId,
+                                  itemId: item.id!,
+                                )).notifier)
+                                .purchase();
+                          } on InsufficientBudgetException {
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(context.loc.insufficientFunds),
+                                ),
+                              );
+                            }
+                          } catch (_) {
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(context.loc.loadError),
+                                ),
+                              );
+                            }
+                          }
+                        },
+                  icon: Icon(item.isPurchased
+                      ? Icons.check_circle_outline
+                      : Icons.shopping_bag_outlined),
+                  label: Text(item.isPurchased
+                      ? context.loc.purchaseCompleted
+                      : context.loc.purchaseItem),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

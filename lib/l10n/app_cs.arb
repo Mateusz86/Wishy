@@ -61,5 +61,8 @@
   "emptyPurchased": "Zatím žádné zakoupené položky.",
   "editItem": "Upravit položku",
   "chooseImageSource": "Přidat fotografii",
-  "chooseFromGallery": "Vybrat z galerie"
+  "chooseFromGallery": "Vybrat z galerie",
+  "itemOptions": "Další možnosti",
+  "deleteConfirmationTitle": "Opravdu chcete pokračovat?",
+  "storeLocation": "Umístění obchodu"
 }

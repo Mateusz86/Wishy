@@ -61,5 +61,8 @@
   "emptyPurchased": "Noch keine Artikel gekauft.",
   "editItem": "Artikel bearbeiten",
   "chooseImageSource": "Foto hinzufügen",
-  "chooseFromGallery": "Aus Galerie auswählen"
+  "chooseFromGallery": "Aus Galerie auswählen",
+  "itemOptions": "Weitere Optionen",
+  "deleteConfirmationTitle": "Bist du sicher?",
+  "storeLocation": "Standort des Geschäfts"
 }

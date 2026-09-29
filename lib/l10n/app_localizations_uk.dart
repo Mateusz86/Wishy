@@ -194,4 +194,13 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get chooseFromGallery => 'Вибрати з галереї';
+
+  @override
+  String get itemOptions => 'Інші параметри';
+
+  @override
+  String get deleteConfirmationTitle => 'Ви впевнені?';
+
+  @override
+  String get storeLocation => 'Розташування магазину';
 }
