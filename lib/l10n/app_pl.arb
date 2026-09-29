@@ -54,5 +54,12 @@
   "openMap": "Otwórz zapisaną lokalizację",
   "purchaseItem": "Kup",
   "purchaseCompleted": "Kupiono",
-  "quickAddFunds": "Szybkie dodawanie środków"
+  "quickAddFunds": "Szybkie dodawanie środków",
+  "toBuy": "Do kupienia",
+  "purchased": "Kupione",
+  "emptyToBuy": "Nie ma nic do kupienia.",
+  "emptyPurchased": "Brak kupionych produktów.",
+  "editItem": "Edytuj produkt",
+  "chooseImageSource": "Dodaj zdjęcie",
+  "chooseFromGallery": "Wybierz z galerii"
 }

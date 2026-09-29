@@ -173,4 +173,25 @@ class AppLocalizationsSk extends AppLocalizations {
 
   @override
   String get quickAddFunds => 'Rýchle pridanie peňazí';
+
+  @override
+  String get toBuy => 'Na kúpu';
+
+  @override
+  String get purchased => 'Kúpené';
+
+  @override
+  String get emptyToBuy => 'Nie je čo kúpiť.';
+
+  @override
+  String get emptyPurchased => 'Zatiaľ žiadne kúpené položky.';
+
+  @override
+  String get editItem => 'Upraviť položku';
+
+  @override
+  String get chooseImageSource => 'Pridať fotografiu';
+
+  @override
+  String get chooseFromGallery => 'Vybrať z galérie';
 }

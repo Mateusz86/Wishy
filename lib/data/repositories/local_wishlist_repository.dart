@@ -140,6 +140,52 @@ class LocalWishlistRepository implements WishlistRepository {
   }
 
   @override
+  Future<void> updateItem(WishlistItem item) async {
+    final id = item.id;
+    if (id == null) throw ArgumentError.value(id, 'item.id');
+    if (item.imagePaths.length > 3) {
+      throw ArgumentError.value(
+          item.imagePaths.length, 'item.imagePaths', 'Maximum is 3');
+    }
+    final db = await _database.database;
+    final previousPaths = await db.transaction((txn) async {
+      final oldRows = await txn.query(
+        'wishlist_items',
+        columns: ['image_paths'],
+        where: 'id = ? AND child_profile_id = ?',
+        whereArgs: [id, item.childProfileId],
+        limit: 1,
+      );
+      if (oldRows.isEmpty) throw const WishlistItemNotFoundException();
+      final changed = await txn.update(
+        'wishlist_items',
+        {
+          'title': item.title.trim(),
+          'price': item.price,
+          'image_paths': jsonEncode(item.imagePaths),
+          'description': _nullableText(item.description),
+          'store_link': _nullableText(item.storeLink),
+          'latitude': item.latitude,
+          'longitude': item.longitude,
+        },
+        where: 'id = ? AND child_profile_id = ?',
+        whereArgs: [id, item.childProfileId],
+      );
+      if (changed != 1) throw const WishlistItemNotFoundException();
+      return _decodeImagePaths(oldRows.first['image_paths'] as String);
+    });
+
+    final retainedPaths = item.imagePaths.toSet();
+    for (final oldPath in previousPaths.toSet().difference(retainedPaths)) {
+      try {
+        await _deleteStoredImage(oldPath);
+      } on FileSystemException {
+        // The database now points at the new image set; stale files are harmless.
+      }
+    }
+  }
+
+  @override
   Future<void> deleteItem(WishlistItem item) async {
     final db = await _database.database;
     await db.transaction((txn) async {

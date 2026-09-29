@@ -173,4 +173,25 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get quickAddFunds => 'Швидке додавання коштів';
+
+  @override
+  String get toBuy => 'До купівлі';
+
+  @override
+  String get purchased => 'Куплено';
+
+  @override
+  String get emptyToBuy => 'Немає що купувати.';
+
+  @override
+  String get emptyPurchased => 'Ще немає придбаних товарів.';
+
+  @override
+  String get editItem => 'Редагувати товар';
+
+  @override
+  String get chooseImageSource => 'Додати фото';
+
+  @override
+  String get chooseFromGallery => 'Вибрати з галереї';
 }

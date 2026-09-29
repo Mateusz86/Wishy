@@ -173,4 +173,25 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get quickAddFunds => 'Quick add funds';
+
+  @override
+  String get toBuy => 'To Buy';
+
+  @override
+  String get purchased => 'Purchased';
+
+  @override
+  String get emptyToBuy => 'Nothing left to buy.';
+
+  @override
+  String get emptyPurchased => 'No purchased items yet.';
+
+  @override
+  String get editItem => 'Edit item';
+
+  @override
+  String get chooseImageSource => 'Add a photo';
+
+  @override
+  String get chooseFromGallery => 'Choose from gallery';
 }

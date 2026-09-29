@@ -174,4 +174,25 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get quickAddFunds => 'Geld schnell hinzufügen';
+
+  @override
+  String get toBuy => 'Noch zu kaufen';
+
+  @override
+  String get purchased => 'Gekauft';
+
+  @override
+  String get emptyToBuy => 'Nichts mehr zu kaufen.';
+
+  @override
+  String get emptyPurchased => 'Noch keine Artikel gekauft.';
+
+  @override
+  String get editItem => 'Artikel bearbeiten';
+
+  @override
+  String get chooseImageSource => 'Foto hinzufügen';
+
+  @override
+  String get chooseFromGallery => 'Aus Galerie auswählen';
 }

@@ -54,5 +54,12 @@
   "openMap": "Open saved location",
   "purchaseItem": "Buy",
   "purchaseCompleted": "Purchased",
-  "quickAddFunds": "Quick add funds"
+  "quickAddFunds": "Quick add funds",
+  "toBuy": "To Buy",
+  "purchased": "Purchased",
+  "emptyToBuy": "Nothing left to buy.",
+  "emptyPurchased": "No purchased items yet.",
+  "editItem": "Edit item",
+  "chooseImageSource": "Add a photo",
+  "chooseFromGallery": "Choose from gallery"
 }

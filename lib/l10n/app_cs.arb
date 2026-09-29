@@ -54,5 +54,12 @@
   "openMap": "Otevřít uloženou polohu",
   "purchaseItem": "Koupit",
   "purchaseCompleted": "Zakoupeno",
-  "quickAddFunds": "Rychlé přidání peněz"
+  "quickAddFunds": "Rychlé přidání peněz",
+  "toBuy": "K nákupu",
+  "purchased": "Zakoupené",
+  "emptyToBuy": "Není co koupit.",
+  "emptyPurchased": "Zatím žádné zakoupené položky.",
+  "editItem": "Upravit položku",
+  "chooseImageSource": "Přidat fotografii",
+  "chooseFromGallery": "Vybrat z galerie"
 }

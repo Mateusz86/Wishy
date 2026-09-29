@@ -173,4 +173,25 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get quickAddFunds => 'Szybkie dodawanie środków';
+
+  @override
+  String get toBuy => 'Do kupienia';
+
+  @override
+  String get purchased => 'Kupione';
+
+  @override
+  String get emptyToBuy => 'Nie ma nic do kupienia.';
+
+  @override
+  String get emptyPurchased => 'Brak kupionych produktów.';
+
+  @override
+  String get editItem => 'Edytuj produkt';
+
+  @override
+  String get chooseImageSource => 'Dodaj zdjęcie';
+
+  @override
+  String get chooseFromGallery => 'Wybierz z galerii';
 }

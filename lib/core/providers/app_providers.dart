@@ -75,6 +75,17 @@ final wishlistItemsProvider = FutureProvider.family<List<WishlistItem>, int>(
   (ref, profileId) => ref.watch(wishlistRepositoryProvider).getItems(profileId),
 );
 
+typedef WishlistTabFilter = ({int profileId, bool purchased});
+
+final wishlistItemsByStatusProvider =
+    Provider.family<AsyncValue<List<WishlistItem>>, WishlistTabFilter>(
+  (ref, filter) => ref.watch(wishlistItemsProvider(filter.profileId)).whenData(
+        (items) => items
+            .where((item) => item.isPurchased == filter.purchased)
+            .toList(growable: false),
+      ),
+);
+
 typedef PurchaseRequest = ({int profileId, int itemId});
 
 final purchaseControllerProvider =

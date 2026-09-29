@@ -50,142 +50,135 @@ class _ProfileWishlistPage extends ConsumerWidget {
       name: currencyCode == 'auto' ? null : currencyCode,
     );
 
-    return Scaffold(
-      appBar: AppBar(
-        leading: Padding(
-          padding: const EdgeInsets.all(8),
-          child: CircleAvatar(
-            backgroundColor: Color(profile.themeColor),
-            child: Icon(profileIcon(profile.iconIndex), color: Colors.white),
-          ),
-        ),
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(profile.name, maxLines: 1, overflow: TextOverflow.ellipsis),
-            Text(context.loc.appTitle,
-                style: Theme.of(context).textTheme.labelSmall),
-          ],
-        ),
-        actions: [
-          IconButton(
-            tooltip: context.loc.selectProfile,
-            onPressed: () => Navigator.of(context).push(
-              MaterialPageRoute(builder: (_) => const ProfileSelectionPage()),
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        appBar: AppBar(
+          leading: Padding(
+            padding: const EdgeInsets.all(8),
+            child: CircleAvatar(
+              backgroundColor: Color(profile.themeColor),
+              child: Icon(profileIcon(profile.iconIndex), color: Colors.white),
             ),
-            icon: const Icon(Icons.switch_account_outlined),
           ),
-          IconButton(
-            tooltip: context.loc.editProfile,
-            onPressed: () async {
-              await Navigator.of(context).push<bool>(
-                MaterialPageRoute(
-                    builder: (_) => ProfileEditorPage(profile: profile)),
-              );
-              ref.invalidate(profilesProvider);
-              ref.invalidate(selectedProfileProvider);
-            },
-            icon: const Icon(Icons.edit_outlined),
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(profile.name, maxLines: 1, overflow: TextOverflow.ellipsis),
+              Text(context.loc.appTitle,
+                  style: Theme.of(context).textTheme.labelSmall),
+            ],
           ),
-          IconButton(
-            tooltip: context.loc.settings,
-            onPressed: () => Navigator.of(context).push(
-              MaterialPageRoute(builder: (_) => const SettingsPage()),
+          actions: [
+            IconButton(
+              tooltip: context.loc.selectProfile,
+              onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const ProfileSelectionPage()),
+              ),
+              icon: const Icon(Icons.switch_account_outlined),
             ),
-            icon: const Icon(Icons.settings_outlined),
-          ),
-        ],
-      ),
-      body: RefreshIndicator(
-        onRefresh: () async {
-          ref.invalidate(profilesProvider);
-          ref.invalidate(wishlistItemsProvider(profile.id));
-        },
-        child: ListView(
-          padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
-          children: [
-            _BudgetPanel(
-              amount: profile.budget,
-              currency: currency,
-              onAdjust: (delta) => _adjustBudget(context, ref, delta < 0),
-              onQuickAdd: (amount) async {
-                await ref
-                    .read(wishlistRepositoryProvider)
-                    .adjustBudget(profile.id, amount);
+            IconButton(
+              tooltip: context.loc.editProfile,
+              onPressed: () async {
+                await Navigator.of(context).push<bool>(
+                  MaterialPageRoute(
+                      builder: (_) => ProfileEditorPage(profile: profile)),
+                );
                 ref.invalidate(profilesProvider);
                 ref.invalidate(selectedProfileProvider);
               },
+              icon: const Icon(Icons.edit_outlined),
             ),
-            const SizedBox(height: 20),
-            Row(children: [
-              Expanded(
-                  child: Text(context.loc.wishlist,
-                      style: Theme.of(context).textTheme.titleLarge)),
-              items.maybeWhen(
-                data: (list) => IconButton(
-                  tooltip: context.loc.sortItems,
-                  onPressed: list.length < 2
-                      ? null
-                      : () => _sortItems(context, ref, list),
-                  icon: const Icon(Icons.sort),
+            IconButton(
+              tooltip: context.loc.settings,
+              onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const SettingsPage()),
+              ),
+              icon: const Icon(Icons.settings_outlined),
+            ),
+          ],
+        ),
+        body: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
+              child: _BudgetPanel(
+                amount: profile.budget,
+                currency: currency,
+                onAdjust: (delta) => _adjustBudget(context, ref, delta < 0),
+                onQuickAdd: (amount) async {
+                  await ref
+                      .read(wishlistRepositoryProvider)
+                      .adjustBudget(profile.id, amount);
+                  ref.invalidate(profilesProvider);
+                  ref.invalidate(selectedProfileProvider);
+                },
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Row(children: [
+                Expanded(
+                    child: Text(context.loc.wishlist,
+                        style: Theme.of(context).textTheme.titleLarge)),
+                items.maybeWhen(
+                  data: (list) => IconButton(
+                    tooltip: context.loc.sortItems,
+                    onPressed: list.length < 2
+                        ? null
+                        : () => _sortItems(context, ref, list),
+                    icon: const Icon(Icons.sort),
+                  ),
+                  orElse: () => const SizedBox.shrink(),
                 ),
-                orElse: () => const SizedBox.shrink(),
-              ),
-              IconButton.filled(
-                tooltip: context.loc.addItem,
-                onPressed: items.valueOrNull == null
-                    ? null
-                    : () {
-                        if (items.valueOrNull!.length >=
-                            AppLimits.maxWishlistItems) {
-                          showPremiumRequiredDialog(context);
-                        } else {
-                          _addItem(context, ref);
-                        }
-                      },
-                icon: const Icon(Icons.add),
-              ),
-            ]),
-            items.when(
-              loading: () => const Padding(
-                padding: EdgeInsets.all(32),
-                child: Center(child: CircularProgressIndicator()),
-              ),
-              error: (error, stack) => Text(context.loc.loadError),
-              data: (list) => list.isEmpty
-                  ? Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 36),
-                      child: Center(child: Text(context.loc.emptyWishlist)),
-                    )
-                  : ReorderableListView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: list.length,
-                      onReorderItem: (oldIndex, newIndex) async {
-                        final reordered = [...list];
-                        final item = reordered.removeAt(oldIndex);
-                        reordered.insert(newIndex, item);
-                        await ref
-                            .read(wishlistRepositoryProvider)
-                            .reorderItems(profile.id, reordered);
-                        ref.invalidate(wishlistItemsProvider(profile.id));
-                      },
-                      itemBuilder: (context, index) => _WishlistItemTile(
-                        key: ValueKey(list[index].id),
-                        item: list[index],
-                        profileId: profile.id,
-                        budget: profile.budget,
-                        currency: currency,
-                        onDelete: () => _deleteItem(context, ref, list[index]),
-                        onOpen: () =>
-                            Navigator.of(context).push(MaterialPageRoute(
-                          builder: (_) => WishlistItemDetailsPage(
-                              item: list[index], currency: currency),
-                        )),
-                      ),
-                    ),
+                IconButton.filled(
+                  tooltip: context.loc.addItem,
+                  onPressed: items.valueOrNull == null
+                      ? null
+                      : () {
+                          if (items.valueOrNull!.length >=
+                              AppLimits.maxWishlistItems) {
+                            showPremiumRequiredDialog(context);
+                          } else {
+                            _addItem(context, ref);
+                          }
+                        },
+                  icon: const Icon(Icons.add),
+                ),
+              ]),
             ),
-            const SizedBox(height: 20),
+            TabBar(tabs: [
+              Tab(text: context.loc.toBuy),
+              Tab(text: context.loc.purchased),
+            ]),
+            Expanded(
+              child: TabBarView(children: [
+                _WishlistTab(
+                  profile: profile,
+                  currency: currency,
+                  purchased: false,
+                  onDelete: (item) => _deleteItem(context, ref, item),
+                  onEdit: (item) => _editItem(context, ref, item),
+                  onOpen: (item) =>
+                      Navigator.of(context).push(MaterialPageRoute(
+                    builder: (_) =>
+                        WishlistItemDetailsPage(item: item, currency: currency),
+                  )),
+                ),
+                _WishlistTab(
+                  profile: profile,
+                  currency: currency,
+                  purchased: true,
+                  onDelete: (item) => _deleteItem(context, ref, item),
+                  onEdit: (item) => _editItem(context, ref, item),
+                  onOpen: (item) =>
+                      Navigator.of(context).push(MaterialPageRoute(
+                    builder: (_) =>
+                        WishlistItemDetailsPage(item: item, currency: currency),
+                  )),
+                ),
+              ]),
+            ),
             const _AdBannerPlaceholder(),
           ],
         ),
@@ -225,31 +218,59 @@ class _ProfileWishlistPage extends ConsumerWidget {
     }
   }
 
-  Future<void> _addItem(BuildContext context, WidgetRef ref) async {
+  Future<void> _addItem(BuildContext context, WidgetRef ref) =>
+      _saveItem(context, ref);
+
+  Future<void> _editItem(
+          BuildContext context, WidgetRef ref, WishlistItem item) =>
+      _saveItem(context, ref, editing: item);
+
+  Future<void> _saveItem(BuildContext context, WidgetRef ref,
+      {WishlistItem? editing}) async {
     final result = await showDialog<_NewItem>(
-        context: context, builder: (_) => const _AddItemDialog());
+      context: context,
+      builder: (_) => _ItemFormDialog(item: editing),
+    );
     if (result == null) return;
     final storedPaths = <String>[];
     try {
       for (final image in result.images) {
         storedPaths.add(await ref.read(imageStorageProvider).persist(image));
       }
-      await ref.read(wishlistRepositoryProvider).addItem(
-            profileId: profile.id,
-            title: result.title,
-            price: result.price,
-            imagePaths: storedPaths,
-            description: result.description,
-            storeLink: result.storeLink,
-            latitude: result.latitude,
-            longitude: result.longitude,
-          );
+      final imagePaths = [...result.existingImagePaths, ...storedPaths];
+      if (editing != null) {
+        await ref.read(wishlistRepositoryProvider).updateItem(WishlistItem(
+              id: editing.id,
+              childProfileId: editing.childProfileId,
+              title: result.title,
+              price: result.price,
+              imagePaths: imagePaths,
+              description: result.description,
+              storeLink: result.storeLink,
+              latitude: result.latitude,
+              longitude: result.longitude,
+              sortOrder: editing.sortOrder,
+              createdAt: editing.createdAt,
+              isPurchased: editing.isPurchased,
+            ));
+      } else {
+        await ref.read(wishlistRepositoryProvider).addItem(
+              profileId: profile.id,
+              title: result.title,
+              price: result.price,
+              imagePaths: imagePaths,
+              description: result.description,
+              storeLink: result.storeLink,
+              latitude: result.latitude,
+              longitude: result.longitude,
+            );
+      }
       ref.invalidate(wishlistItemsProvider(profile.id));
     } on WishlistLimitException {
       for (final storedPath in storedPaths) {
         if (await File(storedPath).exists()) await File(storedPath).delete();
       }
-      if (context.mounted) {
+      if (editing == null && context.mounted) {
         await showPremiumRequiredDialog(context);
       }
     } catch (_) {
@@ -344,6 +365,77 @@ class _BudgetPanel extends StatelessWidget {
       );
 }
 
+class _WishlistTab extends ConsumerWidget {
+  const _WishlistTab({
+    required this.profile,
+    required this.currency,
+    required this.purchased,
+    required this.onDelete,
+    required this.onEdit,
+    required this.onOpen,
+  });
+
+  final ChildProfile profile;
+  final NumberFormat currency;
+  final bool purchased;
+  final ValueChanged<WishlistItem> onDelete;
+  final ValueChanged<WishlistItem> onEdit;
+  final ValueChanged<WishlistItem> onOpen;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final filter = (profileId: profile.id, purchased: purchased);
+    final items = ref.watch(wishlistItemsByStatusProvider(filter));
+    return items.when(
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (error, stack) => Center(child: Text(context.loc.loadError)),
+      data: (list) => RefreshIndicator(
+        onRefresh: () async {
+          ref.invalidate(wishlistItemsProvider(profile.id));
+          await ref.read(wishlistItemsProvider(profile.id).future);
+        },
+        child: list.isEmpty
+            ? ListView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                children: [
+                  SizedBox(
+                    height: 180,
+                    child: Center(
+                      child: Text(purchased
+                          ? context.loc.emptyPurchased
+                          : context.loc.emptyToBuy),
+                    ),
+                  ),
+                ],
+              )
+            : ReorderableListView.builder(
+                padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+                itemCount: list.length,
+                onReorderItem: (oldIndex, newIndex) async {
+                  final reordered = [...list];
+                  final item = reordered.removeAt(oldIndex);
+                  reordered.insert(newIndex, item);
+                  await ref
+                      .read(wishlistRepositoryProvider)
+                      .reorderItems(profile.id, reordered);
+                  ref.invalidate(wishlistItemsProvider(profile.id));
+                },
+                itemBuilder: (context, index) => _WishlistItemTile(
+                  key: ValueKey(list[index].id),
+                  item: list[index],
+                  profileId: profile.id,
+                  budget: profile.budget,
+                  currency: currency,
+                  onDelete: () => onDelete(list[index]),
+                  onEdit: () => onEdit(list[index]),
+                  onOpen: () => onOpen(list[index]),
+                ),
+              ),
+      ),
+    );
+  }
+}
+
 class _WishlistItemTile extends ConsumerWidget {
   const _WishlistItemTile(
       {super.key,
@@ -352,6 +444,7 @@ class _WishlistItemTile extends ConsumerWidget {
       required this.budget,
       required this.currency,
       required this.onDelete,
+      required this.onEdit,
       required this.onOpen});
 
   final WishlistItem item;
@@ -359,6 +452,7 @@ class _WishlistItemTile extends ConsumerWidget {
   final double budget;
   final NumberFormat currency;
   final VoidCallback onDelete;
+  final VoidCallback onEdit;
   final VoidCallback onOpen;
 
   @override
@@ -463,11 +557,17 @@ class _WishlistItemTile extends ConsumerWidget {
                     ),
                   ),
                 ])),
-            IconButton(
-                tooltip: context.loc.delete,
-                onPressed: onDelete,
-                icon: const Icon(Icons.delete_outline)),
-            const Icon(Icons.drag_handle),
+            Column(mainAxisSize: MainAxisSize.min, children: [
+              IconButton(
+                  tooltip: context.loc.editItem,
+                  onPressed: onEdit,
+                  icon: const Icon(Icons.edit_outlined)),
+              IconButton(
+                  tooltip: context.loc.delete,
+                  onPressed: onDelete,
+                  icon: const Icon(Icons.delete_outline)),
+              const Icon(Icons.drag_handle),
+            ]),
           ]),
         ),
       ),
@@ -528,11 +628,12 @@ class _AmountDialogState extends State<_AmountDialog> {
 }
 
 class _NewItem {
-  const _NewItem(this.title, this.price, this.images, this.description,
-      this.storeLink, this.latitude, this.longitude);
+  const _NewItem(this.title, this.price, this.existingImagePaths, this.images,
+      this.description, this.storeLink, this.latitude, this.longitude);
 
   final String title;
   final double price;
+  final List<String> existingImagePaths;
   final List<XFile> images;
   final String description;
   final String storeLink;
@@ -540,22 +641,25 @@ class _NewItem {
   final double? longitude;
 }
 
-class _AddItemDialog extends ConsumerStatefulWidget {
-  const _AddItemDialog();
+class _ItemFormDialog extends ConsumerStatefulWidget {
+  const _ItemFormDialog({this.item});
+
+  final WishlistItem? item;
 
   @override
-  ConsumerState<_AddItemDialog> createState() => _AddItemDialogState();
+  ConsumerState<_ItemFormDialog> createState() => _ItemFormDialogState();
 }
 
-class _AddItemDialogState extends ConsumerState<_AddItemDialog> {
-  final titleController = TextEditingController();
-  final priceController = TextEditingController();
-  final descriptionController = TextEditingController();
-  final storeLinkController = TextEditingController();
+class _ItemFormDialogState extends ConsumerState<_ItemFormDialog> {
+  late final TextEditingController titleController;
+  late final TextEditingController priceController;
+  late final TextEditingController descriptionController;
+  late final TextEditingController storeLinkController;
+  final List<String> existingImagePaths = [];
   final List<XFile> images = [];
   double? latitude;
   double? longitude;
-  bool locating = true;
+  bool locating = false;
 
   @override
   void dispose() {
@@ -569,7 +673,19 @@ class _AddItemDialogState extends ConsumerState<_AddItemDialog> {
   @override
   void initState() {
     super.initState();
-    unawaited(_captureLocation());
+    final item = widget.item;
+    titleController = TextEditingController(text: item?.title ?? '');
+    priceController = TextEditingController(text: item?.price.toString() ?? '');
+    descriptionController =
+        TextEditingController(text: item?.description ?? '');
+    storeLinkController = TextEditingController(text: item?.storeLink ?? '');
+    existingImagePaths.addAll(item?.imagePaths ?? const []);
+    latitude = item?.latitude;
+    longitude = item?.longitude;
+    if (item == null) {
+      locating = true;
+      unawaited(_captureLocation());
+    }
   }
 
   Future<void> _captureLocation() async {
@@ -587,17 +703,61 @@ class _AddItemDialogState extends ConsumerState<_AddItemDialog> {
   }
 
   Future<void> _pickImage() async {
+    final source = await showModalBottomSheet<ImageSource>(
+      context: context,
+      builder: (sheetContext) => SafeArea(
+        child: Wrap(children: [
+          ListTile(
+            leading: const Icon(Icons.photo_camera_outlined),
+            title: Text(context.loc.takePhoto),
+            onTap: () => Navigator.pop(sheetContext, ImageSource.camera),
+          ),
+          ListTile(
+            leading: const Icon(Icons.photo_library_outlined),
+            title: Text(context.loc.chooseFromGallery),
+            onTap: () => Navigator.pop(sheetContext, ImageSource.gallery),
+          ),
+        ]),
+      ),
+    );
+    if (!mounted ||
+        source == null ||
+        existingImagePaths.length + images.length >= 3) {
+      return;
+    }
     final selected = await ref
         .read(imagePickerProvider)
-        .pickImage(source: ImageSource.camera, imageQuality: 85);
-    if (selected != null && images.length < 3) {
+        .pickImage(source: source, imageQuality: 85);
+    if (selected != null &&
+        mounted &&
+        existingImagePaths.length + images.length < 3) {
       setState(() => images.add(selected));
     }
   }
 
+  Widget _imagePreview(ImageProvider image, VoidCallback onRemove) => Stack(
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(6),
+            child:
+                Image(image: image, width: 68, height: 68, fit: BoxFit.cover),
+          ),
+          Positioned(
+            right: 0,
+            top: 0,
+            child: IconButton.filledTonal(
+              visualDensity: VisualDensity.compact,
+              onPressed: onRemove,
+              icon: const Icon(Icons.close, size: 16),
+            ),
+          ),
+        ],
+      );
+
   @override
   Widget build(BuildContext context) => AlertDialog(
-        title: Text(context.loc.addItem),
+        title: Text(
+            widget.item == null ? context.loc.addItem : context.loc.editItem),
         content: SingleChildScrollView(
             child: Column(mainAxisSize: MainAxisSize.min, children: [
           TextField(
@@ -626,30 +786,25 @@ class _AddItemDialogState extends ConsumerState<_AddItemDialog> {
                       ? context.loc.gpsCaptured
                       : context.loc.gpsUnavailable)),
           const SizedBox(height: 12),
-          if (images.isNotEmpty)
+          if (existingImagePaths.isNotEmpty || images.isNotEmpty)
             Wrap(spacing: 8, children: [
+              for (var index = 0; index < existingImagePaths.length; index++)
+                _imagePreview(
+                  FileImage(File(existingImagePaths[index])),
+                  () => setState(() => existingImagePaths.removeAt(index)),
+                ),
               for (var index = 0; index < images.length; index++)
-                Stack(children: [
-                  ClipRRect(
-                      borderRadius: BorderRadius.circular(6),
-                      child: Image.file(File(images[index].path),
-                          width: 68, height: 68, fit: BoxFit.cover)),
-                  Positioned(
-                      right: 0,
-                      top: 0,
-                      child: IconButton.filledTonal(
-                        visualDensity: VisualDensity.compact,
-                        onPressed: () => setState(() => images.removeAt(index)),
-                        icon: const Icon(Icons.close, size: 16),
-                      )),
-                ]),
+                _imagePreview(
+                  FileImage(File(images[index].path)),
+                  () => setState(() => images.removeAt(index)),
+                ),
             ]),
-          if (images.length < 3)
+          if (existingImagePaths.length + images.length < 3)
             OutlinedButton.icon(
                 onPressed: _pickImage,
                 icon: const Icon(Icons.photo_camera_outlined),
                 label: Text(
-                    '${context.loc.takeUpToThreePhotos} (${images.length}/3)')),
+                    '${context.loc.takeUpToThreePhotos} (${existingImagePaths.length + images.length}/3)')),
         ])),
         actions: [
           TextButton(
@@ -666,6 +821,7 @@ class _AddItemDialogState extends ConsumerState<_AddItemDialog> {
                   _NewItem(
                       title,
                       price,
+                      existingImagePaths.toList(),
                       images.toList(),
                       descriptionController.text.trim(),
                       storeLinkController.text.trim(),
