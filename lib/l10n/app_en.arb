@@ -64,5 +64,14 @@
   "chooseFromGallery": "Choose from gallery",
   "itemOptions": "More options",
   "deleteConfirmationTitle": "Are you sure?",
-  "storeLocation": "Store location"
+  "storeLocation": "Store location",
+  "premiumPaywallMessage": "You've reached the free version limit (Max 2 profiles / 3 items). Unlock the full version for just PLN 5/month!",
+  "unlockPremium": "Unlock Premium",
+  "backdoorPasswordPrompt": "Enter the test password",
+  "invalidBackdoorPassword": "Incorrect password.",
+  "premiumUnlocked": "Premium version unlocked!",
+  "onboardingWelcome": "Welcome to Wishy",
+  "onboardingSubtitle": "Set your language and currency to get started.",
+  "start": "Start",
+  "storeIntegrationComingSoon": "Store integration coming soon..."
 }

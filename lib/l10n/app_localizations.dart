@@ -487,6 +487,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Store location'**
   String get storeLocation;
+
+  /// No description provided for @premiumPaywallMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ve reached the free version limit (Max 2 profiles / 3 items). Unlock the full version for just PLN 5/month!'**
+  String get premiumPaywallMessage;
+
+  /// No description provided for @unlockPremium.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock Premium'**
+  String get unlockPremium;
+
+  /// No description provided for @backdoorPasswordPrompt.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the test password'**
+  String get backdoorPasswordPrompt;
+
+  /// No description provided for @invalidBackdoorPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Incorrect password.'**
+  String get invalidBackdoorPassword;
+
+  /// No description provided for @premiumUnlocked.
+  ///
+  /// In en, this message translates to:
+  /// **'Premium version unlocked!'**
+  String get premiumUnlocked;
+
+  /// No description provided for @onboardingWelcome.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome to Wishy'**
+  String get onboardingWelcome;
+
+  /// No description provided for @onboardingSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Set your language and currency to get started.'**
+  String get onboardingSubtitle;
+
+  /// No description provided for @start.
+  ///
+  /// In en, this message translates to:
+  /// **'Start'**
+  String get start;
+
+  /// No description provided for @storeIntegrationComingSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Store integration coming soon...'**
+  String get storeIntegrationComingSoon;
 }
 
 class _AppLocalizationsDelegate

@@ -98,8 +98,9 @@ class ProfileSelectionPage extends ConsumerWidget {
 
   Future<void> _add(BuildContext context, WidgetRef ref) async {
     final profiles = await ref.read(profilesProvider.future);
+    final isPremium = await ref.read(premiumProvider.future);
     if (!context.mounted) return;
-    if (profiles.length >= AppLimits.maxProfiles) {
+    if (!isPremium && profiles.length >= AppLimits.maxProfiles) {
       await showPremiumRequiredDialog(context);
       return;
     }
@@ -241,6 +242,7 @@ class _ProfileEditorPageState extends ConsumerState<ProfileEditorPage> {
           name: name,
           themeColor: _themeColor,
           iconIndex: _iconIndex,
+          isPremium: await ref.read(premiumProvider.future),
         );
         await ref
             .read(appPreferencesProvider.notifier)

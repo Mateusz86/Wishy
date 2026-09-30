@@ -29,6 +29,7 @@ class LocalWishlistRepository implements WishlistRepository {
     required String name,
     required int themeColor,
     required int iconIndex,
+    required bool isPremium,
   }) async {
     final db = await _database.database;
     return db.transaction((txn) async {
@@ -36,7 +37,9 @@ class LocalWishlistRepository implements WishlistRepository {
             await txn.rawQuery('SELECT COUNT(*) FROM child_profiles'),
           ) ??
           0;
-      if (count >= AppLimits.maxProfiles) throw const ProfileLimitException();
+      if (!isPremium && count >= AppLimits.maxProfiles) {
+        throw const ProfileLimitException();
+      }
       return txn.insert('child_profiles', {
         'name': name.trim(),
         'created_at': DateTime.now().toIso8601String(),
@@ -99,6 +102,7 @@ class LocalWishlistRepository implements WishlistRepository {
   @override
   Future<int> addItem({
     required int profileId,
+    required bool isPremium,
     required String title,
     required double price,
     required List<String> imagePaths,
@@ -113,6 +117,13 @@ class LocalWishlistRepository implements WishlistRepository {
     }
     final db = await _database.database;
     return db.transaction((txn) async {
+      final totalCount = Sqflite.firstIntValue(
+            await txn.rawQuery('SELECT COUNT(*) FROM wishlist_items'),
+          ) ??
+          0;
+      if (!isPremium && totalCount >= AppLimits.maxWishlistItems) {
+        throw const WishlistLimitException();
+      }
       final profileCount = Sqflite.firstIntValue(
             await txn.rawQuery(
               'SELECT COUNT(*) FROM wishlist_items WHERE child_profile_id = ?',
@@ -120,9 +131,6 @@ class LocalWishlistRepository implements WishlistRepository {
             ),
           ) ??
           0;
-      if (profileCount >= AppLimits.maxWishlistItems) {
-        throw const WishlistLimitException();
-      }
       return txn.insert('wishlist_items', {
         'child_profile_id': profileId,
         'title': title.trim(),

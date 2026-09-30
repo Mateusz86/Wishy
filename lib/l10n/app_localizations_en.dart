@@ -203,4 +203,33 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get storeLocation => 'Store location';
+
+  @override
+  String get premiumPaywallMessage =>
+      'You\'ve reached the free version limit (Max 2 profiles / 3 items). Unlock the full version for just PLN 5/month!';
+
+  @override
+  String get unlockPremium => 'Unlock Premium';
+
+  @override
+  String get backdoorPasswordPrompt => 'Enter the test password';
+
+  @override
+  String get invalidBackdoorPassword => 'Incorrect password.';
+
+  @override
+  String get premiumUnlocked => 'Premium version unlocked!';
+
+  @override
+  String get onboardingWelcome => 'Welcome to Wishy';
+
+  @override
+  String get onboardingSubtitle =>
+      'Set your language and currency to get started.';
+
+  @override
+  String get start => 'Start';
+
+  @override
+  String get storeIntegrationComingSoon => 'Store integration coming soon...';
 }
