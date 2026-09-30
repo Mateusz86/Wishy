@@ -206,7 +206,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get premiumPaywallMessage =>
-      'You\'ve reached the free version limit (Max 2 profiles / 3 items). Unlock the full version for just PLN 5/month!';
+      'You\'ve reached the free version limit (Max 2 profiles / 3 items). Unlock the full version!';
 
   @override
   String get unlockPremium => 'Unlock Premium';
@@ -232,4 +232,25 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get storeIntegrationComingSoon => 'Store integration coming soon...';
+
+  @override
+  String unlockAtPrice(String price) {
+    return 'Unlock for $price/month';
+  }
+
+  @override
+  String get noInternet => 'No internet connection';
+
+  @override
+  String get loadingOffer => 'Loading offer...';
+
+  @override
+  String get restorePurchases => 'Restore purchases';
+
+  @override
+  String get restorePurchasesNotFound => 'No active subscription found.';
+
+  @override
+  String get purchaseFailed =>
+      'Purchase could not be completed. Please try again.';
 }

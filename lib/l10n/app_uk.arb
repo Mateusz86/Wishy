@@ -65,7 +65,7 @@
   "itemOptions": "Інші параметри",
   "deleteConfirmationTitle": "Ви впевнені?",
   "storeLocation": "Розташування магазину",
-  "premiumPaywallMessage": "Ви досягли ліміту безкоштовної версії (макс. 2 профілі / 3 товари). Розблокуйте повну версію лише за 5 PLN/місяць!",
+  "premiumPaywallMessage": "Ви досягли ліміту безкоштовної версії (макс. 2 профілі / 3 товари). Розблокуйте повну версію!",
   "unlockPremium": "Розблокувати Premium",
   "backdoorPasswordPrompt": "Введіть тестовий пароль",
   "invalidBackdoorPassword": "Неправильний пароль.",
@@ -73,5 +73,12 @@
   "onboardingWelcome": "Вітаємо у Wishy",
   "onboardingSubtitle": "Оберіть мову та валюту, щоб почати.",
   "start": "Почати",
-  "storeIntegrationComingSoon": "Інтеграція з магазином незабаром з'явиться..."
+  "storeIntegrationComingSoon": "Інтеграція з магазином незабаром з'явиться...",
+  "unlockAtPrice": "Розблокувати за {price}/міс.",
+  "@unlockAtPrice": {"placeholders": {"price": {"type": "String"}}},
+  "noInternet": "Немає підключення до Інтернету",
+  "loadingOffer": "Завантаження пропозиції...",
+  "restorePurchases": "Відновити покупки",
+  "restorePurchasesNotFound": "Активну підписку не знайдено.",
+  "purchaseFailed": "Не вдалося завершити покупку. Спробуйте ще раз."
 }

@@ -65,7 +65,7 @@
   "itemOptions": "Más opciones",
   "deleteConfirmationTitle": "¿Estás seguro?",
   "storeLocation": "Ubicación de la tienda",
-  "premiumPaywallMessage": "Has alcanzado el límite de la versión gratuita (Máx. 2 perfiles / 3 artículos). ¡Desbloquea la versión completa por solo 5 PLN/mes!",
+  "premiumPaywallMessage": "Has alcanzado el límite de la versión gratuita (Máx. 2 perfiles / 3 artículos). ¡Desbloquea la versión completa!",
   "unlockPremium": "Desbloquear Premium",
   "backdoorPasswordPrompt": "Introduce la contraseña de prueba",
   "invalidBackdoorPassword": "Contraseña incorrecta.",
@@ -73,5 +73,12 @@
   "onboardingWelcome": "Te damos la bienvenida a Wishy",
   "onboardingSubtitle": "Elige el idioma y la moneda para empezar.",
   "start": "Empezar",
-  "storeIntegrationComingSoon": "La integración con la tienda estará disponible pronto..."
+  "storeIntegrationComingSoon": "La integración con la tienda estará disponible pronto...",
+  "unlockAtPrice": "Desbloquear por {price}/mes",
+  "@unlockAtPrice": {"placeholders": {"price": {"type": "String"}}},
+  "noInternet": "Sin conexión a Internet",
+  "loadingOffer": "Cargando oferta...",
+  "restorePurchases": "Restaurar compras",
+  "restorePurchasesNotFound": "No se encontró ninguna suscripción activa.",
+  "purchaseFailed": "No se pudo completar la compra. Inténtalo de nuevo."
 }

@@ -65,7 +65,7 @@
   "itemOptions": "Další možnosti",
   "deleteConfirmationTitle": "Opravdu chcete pokračovat?",
   "storeLocation": "Umístění obchodu",
-  "premiumPaywallMessage": "Dosáhli jste limitu bezplatné verze (max. 2 profily / 3 položky). Odemkněte plnou verzi za pouhých 5 PLN/měsíc!",
+  "premiumPaywallMessage": "Dosáhli jste limitu bezplatné verze (max. 2 profily / 3 položky). Odemkněte plnou verzi!",
   "unlockPremium": "Odemknout Premium",
   "backdoorPasswordPrompt": "Zadejte testovací heslo",
   "invalidBackdoorPassword": "Nesprávné heslo.",
@@ -73,5 +73,12 @@
   "onboardingWelcome": "Vítejte ve Wishy",
   "onboardingSubtitle": "Začněte výběrem jazyka a měny.",
   "start": "Začít",
-  "storeIntegrationComingSoon": "Integrace obchodu bude brzy k dispozici..."
+  "storeIntegrationComingSoon": "Integrace obchodu bude brzy k dispozici...",
+  "unlockAtPrice": "Odemknout za {price}/měsíc",
+  "@unlockAtPrice": {"placeholders": {"price": {"type": "String"}}},
+  "noInternet": "Bez připojení k internetu",
+  "loadingOffer": "Načítání nabídky...",
+  "restorePurchases": "Obnovit nákupy",
+  "restorePurchasesNotFound": "Nebylo nalezeno aktivní předplatné.",
+  "purchaseFailed": "Nákup se nepodařilo dokončit. Zkuste to znovu."
 }

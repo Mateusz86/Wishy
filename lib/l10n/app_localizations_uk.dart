@@ -206,7 +206,7 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get premiumPaywallMessage =>
-      'Ви досягли ліміту безкоштовної версії (макс. 2 профілі / 3 товари). Розблокуйте повну версію лише за 5 PLN/місяць!';
+      'Ви досягли ліміту безкоштовної версії (макс. 2 профілі / 3 товари). Розблокуйте повну версію!';
 
   @override
   String get unlockPremium => 'Розблокувати Premium';
@@ -232,4 +232,25 @@ class AppLocalizationsUk extends AppLocalizations {
   @override
   String get storeIntegrationComingSoon =>
       'Інтеграція з магазином незабаром з\'явиться...';
+
+  @override
+  String unlockAtPrice(String price) {
+    return 'Розблокувати за $price/міс.';
+  }
+
+  @override
+  String get noInternet => 'Немає підключення до Інтернету';
+
+  @override
+  String get loadingOffer => 'Завантаження пропозиції...';
+
+  @override
+  String get restorePurchases => 'Відновити покупки';
+
+  @override
+  String get restorePurchasesNotFound => 'Активну підписку не знайдено.';
+
+  @override
+  String get purchaseFailed =>
+      'Не вдалося завершити покупку. Спробуйте ще раз.';
 }

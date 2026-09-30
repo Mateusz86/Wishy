@@ -206,7 +206,7 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get premiumPaywallMessage =>
-      'Osiągnąłeś limit darmowej wersji (Max 2 profile / 3 przedmioty). Odblokuj pełną wersję za jedyne 5 zł/miesiąc!';
+      'Osiągnąłeś limit darmowej wersji (Max 2 profile / 3 przedmioty). Odblokuj pełną wersję!';
 
   @override
   String get unlockPremium => 'Odblokuj Premium';
@@ -231,4 +231,25 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get storeIntegrationComingSoon => 'Integracja ze sklepem wkrótce...';
+
+  @override
+  String unlockAtPrice(String price) {
+    return 'Odblokuj za $price/m-c';
+  }
+
+  @override
+  String get noInternet => 'Brak połączenia z internetem';
+
+  @override
+  String get loadingOffer => 'Ładowanie oferty...';
+
+  @override
+  String get restorePurchases => 'Przywróć zakupy';
+
+  @override
+  String get restorePurchasesNotFound => 'Nie znaleziono aktywnej subskrypcji.';
+
+  @override
+  String get purchaseFailed =>
+      'Nie udało się ukończyć zakupu. Spróbuj ponownie.';
 }

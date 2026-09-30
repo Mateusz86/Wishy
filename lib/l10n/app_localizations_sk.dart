@@ -206,7 +206,7 @@ class AppLocalizationsSk extends AppLocalizations {
 
   @override
   String get premiumPaywallMessage =>
-      'Dosiahli ste limit bezplatnej verzie (max. 2 profily / 3 položky). Odomknite plnú verziu len za 5 PLN/mesiac!';
+      'Dosiahli ste limit bezplatnej verzie (max. 2 profily / 3 položky). Odomknite plnú verziu!';
 
   @override
   String get unlockPremium => 'Odomknúť Premium';
@@ -232,4 +232,24 @@ class AppLocalizationsSk extends AppLocalizations {
   @override
   String get storeIntegrationComingSoon =>
       'Integrácia obchodu bude čoskoro dostupná...';
+
+  @override
+  String unlockAtPrice(String price) {
+    return 'Odomknúť za $price/mesiac';
+  }
+
+  @override
+  String get noInternet => 'Bez internetového pripojenia';
+
+  @override
+  String get loadingOffer => 'Načítava sa ponuka...';
+
+  @override
+  String get restorePurchases => 'Obnoviť nákupy';
+
+  @override
+  String get restorePurchasesNotFound => 'Nenašlo sa aktívne predplatné.';
+
+  @override
+  String get purchaseFailed => 'Nákup sa nepodarilo dokončiť. Skúste to znova.';
 }

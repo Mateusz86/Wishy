@@ -491,7 +491,7 @@ abstract class AppLocalizations {
   /// No description provided for @premiumPaywallMessage.
   ///
   /// In en, this message translates to:
-  /// **'You\'ve reached the free version limit (Max 2 profiles / 3 items). Unlock the full version for just PLN 5/month!'**
+  /// **'You\'ve reached the free version limit (Max 2 profiles / 3 items). Unlock the full version!'**
   String get premiumPaywallMessage;
 
   /// No description provided for @unlockPremium.
@@ -541,6 +541,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Store integration coming soon...'**
   String get storeIntegrationComingSoon;
+
+  /// No description provided for @unlockAtPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock for {price}/month'**
+  String unlockAtPrice(String price);
+
+  /// No description provided for @noInternet.
+  ///
+  /// In en, this message translates to:
+  /// **'No internet connection'**
+  String get noInternet;
+
+  /// No description provided for @loadingOffer.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading offer...'**
+  String get loadingOffer;
+
+  /// No description provided for @restorePurchases.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore purchases'**
+  String get restorePurchases;
+
+  /// No description provided for @restorePurchasesNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No active subscription found.'**
+  String get restorePurchasesNotFound;
+
+  /// No description provided for @purchaseFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Purchase could not be completed. Please try again.'**
+  String get purchaseFailed;
 }
 
 class _AppLocalizationsDelegate

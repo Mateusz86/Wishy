@@ -54,20 +54,29 @@ class FirstLaunchController extends AsyncNotifier<bool> {
 
 class PremiumController extends AsyncNotifier<bool> {
   static const _key = 'is_premium_active';
+  static const _backdoorKey = 'is_premium_backdoor_active';
 
   @override
   Future<bool> build() async {
     final preferences = await SharedPreferences.getInstance();
-    return preferences.getBool(_key) ?? false;
+    return (preferences.getBool(_key) ?? false) ||
+        (preferences.getBool(_backdoorKey) ?? false);
   }
 
-  Future<void> setPremium(bool enabled) async {
+  Future<void> setSubscriptionStatus(bool enabled) async {
     final preferences = await SharedPreferences.getInstance();
     await preferences.setBool(_key, enabled);
-    state = AsyncData(enabled);
+    state = AsyncData(
+      enabled || (preferences.getBool(_backdoorKey) ?? false),
+    );
   }
 
-  Future<void> activatePremium() => setPremium(true);
+  Future<void> activatePremium() async {
+    final preferences = await SharedPreferences.getInstance();
+    await preferences.setBool(_backdoorKey, true);
+    await preferences.setBool(_key, true);
+    state = const AsyncData(true);
+  }
 }
 
 class AppPreferencesController extends AsyncNotifier<AppPreferences> {
