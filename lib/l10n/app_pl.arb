@@ -69,5 +69,9 @@
   "unlockPremium": "Odblokuj Premium",
   "backdoorPasswordPrompt": "Wpisz hasło testowe",
   "invalidBackdoorPassword": "Nieprawidłowe hasło.",
-  "premiumUnlocked": "Wersja Premium odblokowana!"
+  "premiumUnlocked": "Wersja Premium odblokowana!",
+  "onboardingWelcome": "Witaj w Wishy",
+  "onboardingSubtitle": "Wybierz język i walutę, aby rozpocząć.",
+  "start": "Rozpocznij",
+  "storeIntegrationComingSoon": "Integracja ze sklepem wkrótce..."
 }

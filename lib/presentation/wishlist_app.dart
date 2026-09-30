@@ -112,7 +112,7 @@ class _BackdoorBrandTitleState extends ConsumerState<_BackdoorBrandTitle> {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(Icons.auto_awesome, color: Color(0xFF087F75), size: 22),
+            Image.asset('assets/icon.png', height: 32, width: 32),
             const SizedBox(width: 8),
             Text(
               context.loc.appTitle,
@@ -220,12 +220,7 @@ class _ProfileWishlistPage extends ConsumerWidget {
                             if (!premium &&
                                 allItems.valueOrNull!.length >=
                                     AppLimits.maxWishlistItems) {
-                              showPremiumRequiredDialog(
-                                context,
-                                onUnlock: () => ref
-                                    .read(premiumProvider.notifier)
-                                    .activatePremium(),
-                              );
+                              showPremiumRequiredDialog(context);
                             } else {
                               _addItem(context, ref);
                             }
@@ -390,10 +385,7 @@ class _ProfileWishlistPage extends ConsumerWidget {
         if (await File(storedPath).exists()) await File(storedPath).delete();
       }
       if (editing == null && context.mounted) {
-        await showPremiumRequiredDialog(
-          context,
-          onUnlock: () => ref.read(premiumProvider.notifier).activatePremium(),
-        );
+        await showPremiumRequiredDialog(context);
       }
     } catch (_) {
       for (final storedPath in storedPaths) {

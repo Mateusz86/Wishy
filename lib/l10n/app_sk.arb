@@ -69,5 +69,9 @@
   "unlockPremium": "Odomknúť Premium",
   "backdoorPasswordPrompt": "Zadajte testovacie heslo",
   "invalidBackdoorPassword": "Nesprávne heslo.",
-  "premiumUnlocked": "Verzia Premium odomknutá!"
+  "premiumUnlocked": "Verzia Premium odomknutá!",
+  "onboardingWelcome": "Vitajte vo Wishy",
+  "onboardingSubtitle": "Na začiatok vyberte jazyk a menu.",
+  "start": "Začať",
+  "storeIntegrationComingSoon": "Integrácia obchodu bude čoskoro dostupná..."
 }

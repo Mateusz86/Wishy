@@ -219,4 +219,17 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get premiumUnlocked => 'Версію Premium розблоковано!';
+
+  @override
+  String get onboardingWelcome => 'Вітаємо у Wishy';
+
+  @override
+  String get onboardingSubtitle => 'Оберіть мову та валюту, щоб почати.';
+
+  @override
+  String get start => 'Почати';
+
+  @override
+  String get storeIntegrationComingSoon =>
+      'Інтеграція з магазином незабаром з\'явиться...';
 }

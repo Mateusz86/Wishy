@@ -2,10 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../core/localization/context_localization.dart';
 
-Future<void> showPremiumRequiredDialog(
-  BuildContext context, {
-  required Future<void> Function() onUnlock,
-}) =>
+Future<void> showPremiumRequiredDialog(BuildContext context) =>
     showModalBottomSheet<void>(
       context: context,
       showDragHandle: true,
@@ -32,9 +29,13 @@ Future<void> showPremiumRequiredDialog(
             SizedBox(
               width: double.infinity,
               child: FilledButton.icon(
-                onPressed: () async {
+                onPressed: () {
                   Navigator.pop(sheetContext);
-                  await onUnlock();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(context.loc.storeIntegrationComingSoon),
+                    ),
+                  );
                 },
                 icon: const Icon(Icons.lock_open),
                 label: Text(context.loc.unlockPremium),

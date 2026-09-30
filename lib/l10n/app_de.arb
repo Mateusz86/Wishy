@@ -69,5 +69,9 @@
   "unlockPremium": "Premium freischalten",
   "backdoorPasswordPrompt": "Testpasswort eingeben",
   "invalidBackdoorPassword": "Falsches Passwort.",
-  "premiumUnlocked": "Premium-Version freigeschaltet!"
+  "premiumUnlocked": "Premium-Version freigeschaltet!",
+  "onboardingWelcome": "Willkommen bei Wishy",
+  "onboardingSubtitle": "Wähle Sprache und Währung, um loszulegen.",
+  "start": "Los geht's",
+  "storeIntegrationComingSoon": "Die Store-Integration kommt bald..."
 }

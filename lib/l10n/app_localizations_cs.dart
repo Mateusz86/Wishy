@@ -219,4 +219,17 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get premiumUnlocked => 'Verze Premium odemčena!';
+
+  @override
+  String get onboardingWelcome => 'Vítejte ve Wishy';
+
+  @override
+  String get onboardingSubtitle => 'Začněte výběrem jazyka a měny.';
+
+  @override
+  String get start => 'Začít';
+
+  @override
+  String get storeIntegrationComingSoon =>
+      'Integrace obchodu bude brzy k dispozici...';
 }

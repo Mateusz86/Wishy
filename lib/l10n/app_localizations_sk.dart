@@ -219,4 +219,17 @@ class AppLocalizationsSk extends AppLocalizations {
 
   @override
   String get premiumUnlocked => 'Verzia Premium odomknutá!';
+
+  @override
+  String get onboardingWelcome => 'Vitajte vo Wishy';
+
+  @override
+  String get onboardingSubtitle => 'Na začiatok vyberte jazyk a menu.';
+
+  @override
+  String get start => 'Začať';
+
+  @override
+  String get storeIntegrationComingSoon =>
+      'Integrácia obchodu bude čoskoro dostupná...';
 }

@@ -32,6 +32,26 @@ final appPreferencesProvider =
 final premiumProvider =
     AsyncNotifierProvider<PremiumController, bool>(PremiumController.new);
 
+final firstLaunchProvider = AsyncNotifierProvider<FirstLaunchController, bool>(
+  FirstLaunchController.new,
+);
+
+class FirstLaunchController extends AsyncNotifier<bool> {
+  static const _key = 'is_first_launch';
+
+  @override
+  Future<bool> build() async {
+    final preferences = await SharedPreferences.getInstance();
+    return preferences.getBool(_key) ?? true;
+  }
+
+  Future<void> complete() async {
+    final preferences = await SharedPreferences.getInstance();
+    await preferences.setBool(_key, false);
+    state = const AsyncData(false);
+  }
+}
+
 class PremiumController extends AsyncNotifier<bool> {
   static const _key = 'is_premium_active';
 

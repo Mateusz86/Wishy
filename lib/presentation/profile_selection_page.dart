@@ -101,10 +101,7 @@ class ProfileSelectionPage extends ConsumerWidget {
     final isPremium = await ref.read(premiumProvider.future);
     if (!context.mounted) return;
     if (!isPremium && profiles.length >= AppLimits.maxProfiles) {
-      await showPremiumRequiredDialog(
-        context,
-        onUnlock: () => ref.read(premiumProvider.notifier).activatePremium(),
-      );
+      await showPremiumRequiredDialog(context);
       return;
     }
     await _edit(context, ref, null);
@@ -265,10 +262,7 @@ class _ProfileEditorPageState extends ConsumerState<ProfileEditorPage> {
       if (mounted) Navigator.pop(context, widget.profile == null);
     } on ProfileLimitException {
       if (mounted) {
-        await showPremiumRequiredDialog(
-          context,
-          onUnlock: () => ref.read(premiumProvider.notifier).activatePremium(),
-        );
+        await showPremiumRequiredDialog(context);
       }
     } finally {
       if (mounted) setState(() => _saving = false);

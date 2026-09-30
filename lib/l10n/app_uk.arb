@@ -69,5 +69,9 @@
   "unlockPremium": "Розблокувати Premium",
   "backdoorPasswordPrompt": "Введіть тестовий пароль",
   "invalidBackdoorPassword": "Неправильний пароль.",
-  "premiumUnlocked": "Версію Premium розблоковано!"
+  "premiumUnlocked": "Версію Premium розблоковано!",
+  "onboardingWelcome": "Вітаємо у Wishy",
+  "onboardingSubtitle": "Оберіть мову та валюту, щоб почати.",
+  "start": "Почати",
+  "storeIntegrationComingSoon": "Інтеграція з магазином незабаром з'явиться..."
 }

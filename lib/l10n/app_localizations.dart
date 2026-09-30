@@ -517,6 +517,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Premium version unlocked!'**
   String get premiumUnlocked;
+
+  /// No description provided for @onboardingWelcome.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome to Wishy'**
+  String get onboardingWelcome;
+
+  /// No description provided for @onboardingSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Set your language and currency to get started.'**
+  String get onboardingSubtitle;
+
+  /// No description provided for @start.
+  ///
+  /// In en, this message translates to:
+  /// **'Start'**
+  String get start;
+
+  /// No description provided for @storeIntegrationComingSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Store integration coming soon...'**
+  String get storeIntegrationComingSoon;
 }
 
 class _AppLocalizationsDelegate
