@@ -1,4 +1,4 @@
-package com.wishy.wishy
+package com.mdrozdz.wishy
 
 import io.flutter.embedding.android.FlutterActivity
 
