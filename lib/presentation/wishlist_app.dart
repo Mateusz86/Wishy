@@ -18,6 +18,7 @@ import 'settings_page.dart';
 import 'premium_required_dialog.dart';
 import 'wishlist_item_details_page.dart';
 import 'wishy_gradient_background.dart';
+import 'banner_ad_widget.dart';
 
 class WishlistHomePage extends ConsumerWidget {
   const WishlistHomePage({super.key});
@@ -86,9 +87,8 @@ class _BackdoorBrandTitleState extends ConsumerState<_BackdoorBrandTitle> {
       await ref.read(premiumProvider.notifier).activatePremium();
       ref.invalidate(premiumProvider);
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(context.loc.premiumUnlocked)),
-        );
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(context.loc.premiumUnlocked)));
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -160,7 +160,8 @@ class _ProfileWishlistPage extends ConsumerWidget {
               onPressed: () async {
                 await Navigator.of(context).push<bool>(
                   MaterialPageRoute(
-                      builder: (_) => ProfileEditorPage(profile: profile)),
+                    builder: (_) => ProfileEditorPage(profile: profile),
+                  ),
                 );
                 ref.invalidate(profilesProvider);
                 ref.invalidate(selectedProfileProvider);
@@ -169,9 +170,9 @@ class _ProfileWishlistPage extends ConsumerWidget {
             ),
             IconButton(
               tooltip: context.loc.settings,
-              onPressed: () => Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => const SettingsPage()),
-              ),
+              onPressed: () => Navigator.of(
+                context,
+              ).push(MaterialPageRoute(builder: (_) => const SettingsPage())),
               icon: const Icon(Icons.settings_outlined),
             ),
           ],
@@ -198,36 +199,41 @@ class _ProfileWishlistPage extends ConsumerWidget {
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Row(children: [
-                  Expanded(
-                      child: Text(context.loc.wishlist,
-                          style: Theme.of(context).textTheme.titleLarge)),
-                  items.maybeWhen(
-                    data: (list) => IconButton(
-                      tooltip: context.loc.sortItems,
-                      onPressed: list.length < 2
-                          ? null
-                          : () => _sortItems(context, ref, list),
-                      icon: const Icon(Icons.sort),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        context.loc.wishlist,
+                        style: Theme.of(context).textTheme.titleLarge,
+                      ),
                     ),
-                    orElse: () => const SizedBox.shrink(),
-                  ),
-                  IconButton.filled(
-                    tooltip: context.loc.addItem,
-                    onPressed: allItems.valueOrNull == null
-                        ? null
-                        : () {
-                            if (!premium &&
-                                allItems.valueOrNull!.length >=
-                                    AppLimits.maxWishlistItems) {
-                              showPremiumRequiredDialog(context);
-                            } else {
-                              _addItem(context, ref);
-                            }
-                          },
-                    icon: const Icon(Icons.add),
-                  ),
-                ]),
+                    items.maybeWhen(
+                      data: (list) => IconButton(
+                        tooltip: context.loc.sortItems,
+                        onPressed: list.length < 2
+                            ? null
+                            : () => _sortItems(context, ref, list),
+                        icon: const Icon(Icons.sort),
+                      ),
+                      orElse: () => const SizedBox.shrink(),
+                    ),
+                    IconButton.filled(
+                      tooltip: context.loc.addItem,
+                      onPressed: allItems.valueOrNull == null
+                          ? null
+                          : () {
+                              if (!premium &&
+                                  allItems.valueOrNull!.length >=
+                                      AppLimits.maxWishlistItems) {
+                                showPremiumRequiredDialog(context);
+                              } else {
+                                _addItem(context, ref);
+                              }
+                            },
+                      icon: const Icon(Icons.add),
+                    ),
+                  ],
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
@@ -262,35 +268,44 @@ class _ProfileWishlistPage extends ConsumerWidget {
                 ),
               ),
               Expanded(
-                child: TabBarView(children: [
-                  _WishlistTab(
-                    profile: profile,
-                    currency: currency,
-                    purchased: false,
-                    onDelete: (item) => _deleteItem(context, ref, item),
-                    onEdit: (item) => _editItem(context, ref, item),
-                    onOpen: (item) =>
-                        Navigator.of(context).push(MaterialPageRoute(
-                      builder: (_) => WishlistItemDetailsPage(
-                          item: item, currency: currency),
-                    )),
-                  ),
-                  if (premium)
+                child: TabBarView(
+                  children: [
                     _WishlistTab(
                       profile: profile,
                       currency: currency,
-                      purchased: true,
+                      purchased: false,
                       onDelete: (item) => _deleteItem(context, ref, item),
                       onEdit: (item) => _editItem(context, ref, item),
-                      onOpen: (item) =>
-                          Navigator.of(context).push(MaterialPageRoute(
-                        builder: (_) => WishlistItemDetailsPage(
-                            item: item, currency: currency),
-                      )),
+                      onOpen: (item) => Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => WishlistItemDetailsPage(
+                            item: item,
+                            currency: currency,
+                          ),
+                        ),
+                      ),
                     ),
-                ]),
+                    if (premium)
+                      _WishlistTab(
+                        profile: profile,
+                        currency: currency,
+                        purchased: true,
+                        onDelete: (item) => _deleteItem(context, ref, item),
+                        onEdit: (item) => _editItem(context, ref, item),
+                        onOpen: (item) => Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (_) => WishlistItemDetailsPage(
+                              item: item,
+                              currency: currency,
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
               ),
-              const _AdBannerPlaceholder(),
+              //const _AdBannerPlaceholder(),
+              const AdBannerWidget(),
             ],
           ),
         ),
@@ -299,7 +314,10 @@ class _ProfileWishlistPage extends ConsumerWidget {
   }
 
   Future<void> _adjustBudget(
-      BuildContext context, WidgetRef ref, bool subtract) async {
+    BuildContext context,
+    WidgetRef ref,
+    bool subtract,
+  ) async {
     final amount = await showDialog<double>(
       context: context,
       builder: (_) => _AmountDialog(
@@ -321,8 +339,9 @@ class _ProfileWishlistPage extends ConsumerWidget {
             content: Text(context.loc.insufficientFunds),
             actions: [
               TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: Text(context.loc.ok))
+                onPressed: () => Navigator.pop(context),
+                child: Text(context.loc.ok),
+              ),
             ],
           ),
         );
@@ -334,11 +353,17 @@ class _ProfileWishlistPage extends ConsumerWidget {
       _saveItem(context, ref);
 
   Future<void> _editItem(
-          BuildContext context, WidgetRef ref, WishlistItem item) =>
+    BuildContext context,
+    WidgetRef ref,
+    WishlistItem item,
+  ) =>
       _saveItem(context, ref, editing: item);
 
-  Future<void> _saveItem(BuildContext context, WidgetRef ref,
-      {WishlistItem? editing}) async {
+  Future<void> _saveItem(
+    BuildContext context,
+    WidgetRef ref, {
+    WishlistItem? editing,
+  }) async {
     final result = await showDialog<_NewItem>(
       context: context,
       builder: (_) => _ItemFormDialog(item: editing),
@@ -351,20 +376,22 @@ class _ProfileWishlistPage extends ConsumerWidget {
       }
       final imagePaths = [...result.existingImagePaths, ...storedPaths];
       if (editing != null) {
-        await ref.read(wishlistRepositoryProvider).updateItem(WishlistItem(
-              id: editing.id,
-              childProfileId: editing.childProfileId,
-              title: result.title,
-              price: result.price,
-              imagePaths: imagePaths,
-              description: result.description,
-              storeLink: result.storeLink,
-              latitude: result.latitude,
-              longitude: result.longitude,
-              sortOrder: editing.sortOrder,
-              createdAt: editing.createdAt,
-              isPurchased: editing.isPurchased,
-            ));
+        await ref.read(wishlistRepositoryProvider).updateItem(
+              WishlistItem(
+                id: editing.id,
+                childProfileId: editing.childProfileId,
+                title: result.title,
+                price: result.price,
+                imagePaths: imagePaths,
+                description: result.description,
+                storeLink: result.storeLink,
+                latitude: result.latitude,
+                longitude: result.longitude,
+                sortOrder: editing.sortOrder,
+                createdAt: editing.createdAt,
+                isPurchased: editing.isPurchased,
+              ),
+            );
       } else {
         await ref.read(wishlistRepositoryProvider).addItem(
               profileId: profile.id,
@@ -396,7 +423,10 @@ class _ProfileWishlistPage extends ConsumerWidget {
   }
 
   Future<void> _deleteItem(
-      BuildContext context, WidgetRef ref, WishlistItem item) async {
+    BuildContext context,
+    WidgetRef ref,
+    WishlistItem item,
+  ) async {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (_) => AlertDialog(
@@ -404,11 +434,13 @@ class _ProfileWishlistPage extends ConsumerWidget {
         content: Text(context.loc.deleteConfirmation(item.title)),
         actions: [
           TextButton(
-              onPressed: () => Navigator.pop(context, false),
-              child: Text(context.loc.cancel)),
+            onPressed: () => Navigator.pop(context, false),
+            child: Text(context.loc.cancel),
+          ),
           FilledButton(
-              onPressed: () => Navigator.pop(context, true),
-              child: Text(context.loc.delete)),
+            onPressed: () => Navigator.pop(context, true),
+            child: Text(context.loc.delete),
+          ),
         ],
       ),
     );
@@ -419,7 +451,10 @@ class _ProfileWishlistPage extends ConsumerWidget {
   }
 
   Future<void> _sortItems(
-      BuildContext context, WidgetRef ref, List<WishlistItem> items) async {
+    BuildContext context,
+    WidgetRef ref,
+    List<WishlistItem> items,
+  ) async {
     final sorted = [...items]
       ..sort((a, b) => a.title.toLowerCase().compareTo(b.title.toLowerCase()));
     await ref.read(wishlistRepositoryProvider).reorderItems(profile.id, sorted);
@@ -428,13 +463,14 @@ class _ProfileWishlistPage extends ConsumerWidget {
 }
 
 class _BudgetPanel extends StatelessWidget {
-  const _BudgetPanel(
-      {required this.profileName,
-      required this.profileIconIndex,
-      required this.amount,
-      required this.currency,
-      required this.onAdjust,
-      required this.onQuickAdd});
+  const _BudgetPanel({
+    required this.profileName,
+    required this.profileIconIndex,
+    required this.amount,
+    required this.currency,
+    required this.onAdjust,
+    required this.onQuickAdd,
+  });
 
   final String profileName;
   final int profileIconIndex;
@@ -470,29 +506,36 @@ class _BudgetPanel extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(children: [
-                CircleAvatar(
-                  radius: 22,
-                  backgroundColor: Colors.white.withValues(alpha: .2),
-                  child:
-                      Icon(profileIcon(profileIconIndex), color: Colors.white),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text(
-                    profileName,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
+              Row(
+                children: [
+                  CircleAvatar(
+                    radius: 22,
+                    backgroundColor: Colors.white.withValues(alpha: .2),
+                    child: Icon(
+                      profileIcon(profileIconIndex),
                       color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w800,
                     ),
                   ),
-                ),
-                const Icon(Icons.credit_card_rounded,
-                    color: Color(0xCCFFFFFF), size: 26),
-              ]),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      profileName,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                  ),
+                  const Icon(
+                    Icons.credit_card_rounded,
+                    color: Color(0xCCFFFFFF),
+                    size: 26,
+                  ),
+                ],
+              ),
               const SizedBox(height: 22),
               Text(
                 context.loc.currentBudget,
@@ -515,21 +558,23 @@ class _BudgetPanel extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 14),
-              Row(children: [
-                TextButton.icon(
-                  onPressed: () => onAdjust(1),
-                  style: TextButton.styleFrom(foregroundColor: Colors.white),
-                  icon: const Icon(Icons.add_circle_outline),
-                  label: Text(context.loc.addFunds),
-                ),
-                const SizedBox(width: 8),
-                TextButton.icon(
-                  onPressed: () => onAdjust(-1),
-                  style: TextButton.styleFrom(foregroundColor: Colors.white),
-                  icon: const Icon(Icons.remove_circle_outline),
-                  label: Text(context.loc.subtractFunds),
-                ),
-              ]),
+              Row(
+                children: [
+                  TextButton.icon(
+                    onPressed: () => onAdjust(1),
+                    style: TextButton.styleFrom(foregroundColor: Colors.white),
+                    icon: const Icon(Icons.add_circle_outline),
+                    label: Text(context.loc.addFunds),
+                  ),
+                  const SizedBox(width: 8),
+                  TextButton.icon(
+                    onPressed: () => onAdjust(-1),
+                    style: TextButton.styleFrom(foregroundColor: Colors.white),
+                    icon: const Icon(Icons.remove_circle_outline),
+                    label: Text(context.loc.subtractFunds),
+                  ),
+                ],
+              ),
             ],
           ),
         ),
@@ -551,7 +596,9 @@ class _BudgetPanel extends StatelessWidget {
                       label: Text(
                         '+${currency.format(amount)}',
                         style: TextStyle(
-                            color: primary, fontWeight: FontWeight.w800),
+                          color: primary,
+                          fontWeight: FontWeight.w800,
+                        ),
                       ),
                       onPressed: () => onQuickAdd(amount),
                     ),
@@ -601,9 +648,11 @@ class _WishlistTab extends ConsumerWidget {
                   SizedBox(
                     height: 180,
                     child: Center(
-                      child: Text(purchased
-                          ? context.loc.emptyPurchased
-                          : context.loc.emptyToBuy),
+                      child: Text(
+                        purchased
+                            ? context.loc.emptyPurchased
+                            : context.loc.emptyToBuy,
+                      ),
                     ),
                   ),
                 ],
@@ -639,15 +688,16 @@ class _WishlistTab extends ConsumerWidget {
 enum _WishlistItemAction { edit, delete }
 
 class _WishlistItemTile extends ConsumerWidget {
-  const _WishlistItemTile(
-      {super.key,
-      required this.item,
-      required this.profileId,
-      required this.budget,
-      required this.currency,
-      required this.onDelete,
-      required this.onEdit,
-      required this.onOpen});
+  const _WishlistItemTile({
+    super.key,
+    required this.item,
+    required this.profileId,
+    required this.budget,
+    required this.currency,
+    required this.onDelete,
+    required this.onEdit,
+    required this.onOpen,
+  });
 
   final WishlistItem item;
   final int profileId;
@@ -659,9 +709,9 @@ class _WishlistItemTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final purchase = ref.watch(purchaseControllerProvider(
-      (profileId: profileId, itemId: item.id!),
-    ));
+    final purchase = ref.watch(
+      purchaseControllerProvider((profileId: profileId, itemId: item.id!)),
+    );
     final progress =
         item.price == 0 ? 1.0 : (budget / item.price).clamp(0.0, 1.0);
     final theme = Theme.of(context);
@@ -689,11 +739,14 @@ class _WishlistItemTile extends ConsumerWidget {
                       height: 76,
                       child: item.imagePaths.isNotEmpty &&
                               File(item.imagePaths.first).existsSync()
-                          ? Image.file(File(item.imagePaths.first),
-                              fit: BoxFit.cover)
+                          ? Image.file(
+                              File(item.imagePaths.first),
+                              fit: BoxFit.cover,
+                            )
                           : const ColoredBox(
                               color: Color(0xFFEDF3F2),
-                              child: Icon(Icons.toys_outlined, size: 30)),
+                              child: Icon(Icons.toys_outlined, size: 30),
+                            ),
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -751,19 +804,23 @@ class _WishlistItemTile extends ConsumerWidget {
                     itemBuilder: (context) => [
                       PopupMenuItem(
                         value: _WishlistItemAction.edit,
-                        child: Row(children: [
-                          const Icon(Icons.edit_outlined, size: 20),
-                          const SizedBox(width: 10),
-                          Text(context.loc.editItem),
-                        ]),
+                        child: Row(
+                          children: [
+                            const Icon(Icons.edit_outlined, size: 20),
+                            const SizedBox(width: 10),
+                            Text(context.loc.editItem),
+                          ],
+                        ),
                       ),
                       PopupMenuItem(
                         value: _WishlistItemAction.delete,
-                        child: Row(children: [
-                          const Icon(Icons.delete_outline, size: 20),
-                          const SizedBox(width: 10),
-                          Text(context.loc.delete),
-                        ]),
+                        child: Row(
+                          children: [
+                            const Icon(Icons.delete_outline, size: 20),
+                            const SizedBox(width: 10),
+                            Text(context.loc.delete),
+                          ],
+                        ),
                       ),
                     ],
                   ),
@@ -780,7 +837,9 @@ class _WishlistItemTile extends ConsumerWidget {
               const SizedBox(height: 6),
               Text(
                 context.loc.progressLabel(
-                    currency.format(budget), currency.format(item.price)),
+                  currency.format(budget),
+                  currency.format(item.price),
+                ),
                 style: theme.textTheme.bodySmall?.copyWith(
                   color: theme.colorScheme.onSurfaceVariant,
                   fontWeight: FontWeight.w600,
@@ -793,17 +852,20 @@ class _WishlistItemTile extends ConsumerWidget {
                   style: FilledButton.styleFrom(
                     minimumSize: const Size.fromHeight(48),
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(14)),
+                      borderRadius: BorderRadius.circular(14),
+                    ),
                   ),
                   onPressed: item.isPurchased || purchase.isLoading
                       ? null
                       : () async {
                           try {
                             await ref
-                                .read(purchaseControllerProvider((
-                                  profileId: profileId,
-                                  itemId: item.id!,
-                                )).notifier)
+                                .read(
+                                  purchaseControllerProvider((
+                                    profileId: profileId,
+                                    itemId: item.id!,
+                                  )).notifier,
+                                )
                                 .purchase();
                           } on InsufficientBudgetException {
                             if (context.mounted) {
@@ -816,19 +878,21 @@ class _WishlistItemTile extends ConsumerWidget {
                           } catch (_) {
                             if (context.mounted) {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(context.loc.loadError),
-                                ),
+                                SnackBar(content: Text(context.loc.loadError)),
                               );
                             }
                           }
                         },
-                  icon: Icon(item.isPurchased
-                      ? Icons.check_circle_outline
-                      : Icons.shopping_bag_outlined),
-                  label: Text(item.isPurchased
-                      ? context.loc.purchaseCompleted
-                      : context.loc.purchaseItem),
+                  icon: Icon(
+                    item.isPurchased
+                        ? Icons.check_circle_outline
+                        : Icons.shopping_bag_outlined,
+                  ),
+                  label: Text(
+                    item.isPurchased
+                        ? context.loc.purchaseCompleted
+                        : context.loc.purchaseItem,
+                  ),
                 ),
               ),
             ],
@@ -846,8 +910,11 @@ class _AdBannerPlaceholder extends StatelessWidget {
   Widget build(BuildContext context) => SizedBox(
         height: 50,
         child: Center(
-            child: Text(context.loc.adPlaceholder,
-                style: Theme.of(context).textTheme.bodySmall)),
+          child: Text(
+            context.loc.adPlaceholder,
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
+        ),
       );
 }
 
@@ -880,11 +947,14 @@ class _AmountDialogState extends State<_AmountDialog> {
         ),
         actions: [
           TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text(context.loc.cancel)),
+            onPressed: () => Navigator.pop(context),
+            child: Text(context.loc.cancel),
+          ),
           FilledButton(
             onPressed: () => Navigator.pop(
-                context, double.tryParse(controller.text.replaceAll(',', '.'))),
+              context,
+              double.tryParse(controller.text.replaceAll(',', '.')),
+            ),
             child: Text(context.loc.save),
           ),
         ],
@@ -892,8 +962,16 @@ class _AmountDialogState extends State<_AmountDialog> {
 }
 
 class _NewItem {
-  const _NewItem(this.title, this.price, this.existingImagePaths, this.images,
-      this.description, this.storeLink, this.latitude, this.longitude);
+  const _NewItem(
+    this.title,
+    this.price,
+    this.existingImagePaths,
+    this.images,
+    this.description,
+    this.storeLink,
+    this.latitude,
+    this.longitude,
+  );
 
   final String title;
   final double price;
@@ -940,8 +1018,9 @@ class _ItemFormDialogState extends ConsumerState<_ItemFormDialog> {
     final item = widget.item;
     titleController = TextEditingController(text: item?.title ?? '');
     priceController = TextEditingController(text: item?.price.toString() ?? '');
-    descriptionController =
-        TextEditingController(text: item?.description ?? '');
+    descriptionController = TextEditingController(
+      text: item?.description ?? '',
+    );
     storeLinkController = TextEditingController(text: item?.storeLink ?? '');
     existingImagePaths.addAll(item?.imagePaths ?? const []);
     latitude = item?.latitude;
@@ -970,18 +1049,20 @@ class _ItemFormDialogState extends ConsumerState<_ItemFormDialog> {
     final source = await showModalBottomSheet<ImageSource>(
       context: context,
       builder: (sheetContext) => SafeArea(
-        child: Wrap(children: [
-          ListTile(
-            leading: const Icon(Icons.photo_camera_outlined),
-            title: Text(context.loc.takePhoto),
-            onTap: () => Navigator.pop(sheetContext, ImageSource.camera),
-          ),
-          ListTile(
-            leading: const Icon(Icons.photo_library_outlined),
-            title: Text(context.loc.chooseFromGallery),
-            onTap: () => Navigator.pop(sheetContext, ImageSource.gallery),
-          ),
-        ]),
+        child: Wrap(
+          children: [
+            ListTile(
+              leading: const Icon(Icons.photo_camera_outlined),
+              title: Text(context.loc.takePhoto),
+              onTap: () => Navigator.pop(sheetContext, ImageSource.camera),
+            ),
+            ListTile(
+              leading: const Icon(Icons.photo_library_outlined),
+              title: Text(context.loc.chooseFromGallery),
+              onTap: () => Navigator.pop(sheetContext, ImageSource.gallery),
+            ),
+          ],
+        ),
       ),
     );
     if (!mounted ||
@@ -1021,76 +1102,100 @@ class _ItemFormDialogState extends ConsumerState<_ItemFormDialog> {
   @override
   Widget build(BuildContext context) => AlertDialog(
         title: Text(
-            widget.item == null ? context.loc.addItem : context.loc.editItem),
+          widget.item == null ? context.loc.addItem : context.loc.editItem,
+        ),
         content: SingleChildScrollView(
-            child: Column(mainAxisSize: MainAxisSize.min, children: [
-          TextField(
-              controller: titleController,
-              autofocus: true,
-              decoration: InputDecoration(labelText: context.loc.itemName)),
-          TextField(
-              controller: priceController,
-              keyboardType:
-                  const TextInputType.numberWithOptions(decimal: true),
-              decoration: InputDecoration(labelText: context.loc.itemPrice)),
-          TextField(
-              controller: descriptionController,
-              maxLines: 3,
-              decoration: InputDecoration(labelText: context.loc.description)),
-          TextField(
-              controller: storeLinkController,
-              keyboardType: TextInputType.url,
-              decoration: InputDecoration(labelText: context.loc.storeLink)),
-          const SizedBox(height: 8),
-          Align(
-              alignment: Alignment.centerLeft,
-              child: Text(locating
-                  ? context.loc.gpsSearching
-                  : latitude != null
-                      ? context.loc.gpsCaptured
-                      : context.loc.gpsUnavailable)),
-          const SizedBox(height: 12),
-          if (existingImagePaths.isNotEmpty || images.isNotEmpty)
-            Wrap(spacing: 8, children: [
-              for (var index = 0; index < existingImagePaths.length; index++)
-                _imagePreview(
-                  FileImage(File(existingImagePaths[index])),
-                  () => setState(() => existingImagePaths.removeAt(index)),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: titleController,
+                autofocus: true,
+                decoration: InputDecoration(labelText: context.loc.itemName),
+              ),
+              TextField(
+                controller: priceController,
+                keyboardType:
+                    const TextInputType.numberWithOptions(decimal: true),
+                decoration: InputDecoration(labelText: context.loc.itemPrice),
+              ),
+              TextField(
+                controller: descriptionController,
+                maxLines: 3,
+                decoration: InputDecoration(labelText: context.loc.description),
+              ),
+              TextField(
+                controller: storeLinkController,
+                keyboardType: TextInputType.url,
+                decoration: InputDecoration(labelText: context.loc.storeLink),
+              ),
+              const SizedBox(height: 8),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  locating
+                      ? context.loc.gpsSearching
+                      : latitude != null
+                          ? context.loc.gpsCaptured
+                          : context.loc.gpsUnavailable,
                 ),
-              for (var index = 0; index < images.length; index++)
-                _imagePreview(
-                  FileImage(File(images[index].path)),
-                  () => setState(() => images.removeAt(index)),
+              ),
+              const SizedBox(height: 12),
+              if (existingImagePaths.isNotEmpty || images.isNotEmpty)
+                Wrap(
+                  spacing: 8,
+                  children: [
+                    for (var index = 0;
+                        index < existingImagePaths.length;
+                        index++)
+                      _imagePreview(
+                        FileImage(File(existingImagePaths[index])),
+                        () =>
+                            setState(() => existingImagePaths.removeAt(index)),
+                      ),
+                    for (var index = 0; index < images.length; index++)
+                      _imagePreview(
+                        FileImage(File(images[index].path)),
+                        () => setState(() => images.removeAt(index)),
+                      ),
+                  ],
                 ),
-            ]),
-          if (existingImagePaths.length + images.length < 3)
-            OutlinedButton.icon(
-                onPressed: _pickImage,
-                icon: const Icon(Icons.photo_camera_outlined),
-                label: Text(
-                    '${context.loc.takeUpToThreePhotos} (${existingImagePaths.length + images.length}/3)')),
-        ])),
+              if (existingImagePaths.length + images.length < 3)
+                OutlinedButton.icon(
+                  onPressed: _pickImage,
+                  icon: const Icon(Icons.photo_camera_outlined),
+                  label: Text(
+                    '${context.loc.takeUpToThreePhotos} (${existingImagePaths.length + images.length}/3)',
+                  ),
+                ),
+            ],
+          ),
+        ),
         actions: [
           TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text(context.loc.cancel)),
+            onPressed: () => Navigator.pop(context),
+            child: Text(context.loc.cancel),
+          ),
           FilledButton(
             onPressed: () {
-              final price =
-                  double.tryParse(priceController.text.replaceAll(',', '.'));
+              final price = double.tryParse(
+                priceController.text.replaceAll(',', '.'),
+              );
               final title = titleController.text.trim();
               if (title.isEmpty || price == null || price < 0) return;
               Navigator.pop(
-                  context,
-                  _NewItem(
-                      title,
-                      price,
-                      existingImagePaths.toList(),
-                      images.toList(),
-                      descriptionController.text.trim(),
-                      storeLinkController.text.trim(),
-                      latitude,
-                      longitude));
+                context,
+                _NewItem(
+                  title,
+                  price,
+                  existingImagePaths.toList(),
+                  images.toList(),
+                  descriptionController.text.trim(),
+                  storeLinkController.text.trim(),
+                  latitude,
+                  longitude,
+                ),
+              );
             },
             child: Text(context.loc.save),
           ),

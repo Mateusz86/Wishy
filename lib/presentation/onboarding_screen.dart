@@ -68,10 +68,6 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      Center(
-                        child: Image.asset('assets/icon.png',
-                            height: 92, width: 92),
-                      ),
                       const SizedBox(height: 24),
                       Text(
                         context.loc.onboardingWelcome,

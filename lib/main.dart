@@ -16,8 +16,8 @@ import 'presentation/wishlist_app.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // Replace these public SDK keys with the app-specific RevenueCat keys.
-  const androidRevenueCatApiKey = 'goog_PLACEHOLDER_KEY';
-  const iosRevenueCatApiKey = 'appl_PLACEHOLDER_KEY';
+  const androidRevenueCatApiKey = 'goog_eyScZXnHlasDukxMaAPPZjYMFsQ';
+  const iosRevenueCatApiKey = 'goog_eyScZXnHlasDukxMaAPPZjYMFsQ';
   await Purchases.configure(
     PurchasesConfiguration(
       Platform.isIOS ? iosRevenueCatApiKey : androidRevenueCatApiKey,
@@ -26,7 +26,7 @@ Future<void> main() async {
   try {
     final customerInfo = await Purchases.getCustomerInfo();
     final isSubscriptionActive =
-        customerInfo.entitlements.active.containsKey('premium');
+        customerInfo.entitlements.active.containsKey('wishy_pro');
     final preferences = await SharedPreferences.getInstance();
     await preferences.setBool('is_premium_active', isSubscriptionActive);
   } catch (_) {

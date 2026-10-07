@@ -49,7 +49,7 @@ class RevenueCatService {
   }
 
   Future<bool> _applyCustomerInfo(CustomerInfo customerInfo) async {
-    final isActive = customerInfo.entitlements.active.containsKey('premium');
+    final isActive = customerInfo.entitlements.active.containsKey('wishy_pro');
     await _ref.read(premiumProvider.notifier).setSubscriptionStatus(isActive);
     return isActive;
   }
