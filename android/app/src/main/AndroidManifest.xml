@@ -1,13 +1,22 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    
+    <!-- TA LINIJKA WYRZUCI TŁO Z PACZKI: -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" tools:node="remove" />
+    <uses-permission android:name="com.android.vending.BILLING" />
     <application
         android:label="Wishy"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <meta-data
-            android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-3940256099942544~3347511713" />
+           android:name="com.google.android.gms.ads.APPLICATION_ID"
+           android:value="ca-app-pub-6230643177711896~6692845861"/>
+            <!--
+            ca-app-pub-6230643177711896~6692845861
+            ca-app-pub-6230643177711896/9921644435
+             org- ca-app-pub-3940256099942544~3347511713
+            -->
         <activity
             android:name=".MainActivity"
             android:exported="true"
