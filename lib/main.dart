@@ -61,16 +61,30 @@ class WishyApp extends ConsumerWidget {
       supportedLocales: AppLocalizations.supportedLocales,
       theme: ThemeData(
         useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF087F75),
-          brightness: Brightness.light,
+        colorScheme: const ColorScheme.light(
+          primary: Color(0xFF2563EB),
+          onPrimary: Colors.white,
+          secondary: Color(0xFF38BDF8),
+          onSecondary: Color(0xFF1E293B),
           surface: Colors.white,
+          onSurface: Color(0xFF1E293B),
+          onSurfaceVariant: Color(0xFF64748B),
         ),
-        scaffoldBackgroundColor: Colors.grey[50],
-        textTheme: GoogleFonts.nunitoTextTheme(),
+        scaffoldBackgroundColor: const Color(0xFFF4F8FC),
+        textTheme: GoogleFonts.nunitoTextTheme().apply(
+          bodyColor: const Color(0xFF1E293B),
+          displayColor: const Color(0xFF1E293B),
+        ),
         appBarTheme: const AppBarTheme(
-          backgroundColor: Color(0xFFFAFAFA),
+          backgroundColor: Color(0xFFF4F8FC),
           surfaceTintColor: Colors.transparent,
+          foregroundColor: Color(0xFF1E293B),
+        ),
+        filledButtonTheme: FilledButtonThemeData(
+          style: FilledButton.styleFrom(
+            backgroundColor: const Color(0xFF2563EB),
+            foregroundColor: Colors.white,
+          ),
         ),
       ),
       home: firstLaunch.when(

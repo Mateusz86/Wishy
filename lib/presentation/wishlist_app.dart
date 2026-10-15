@@ -181,7 +181,7 @@ class _ProfileWishlistPage extends ConsumerWidget {
           child: Column(
             children: [
               Padding(
-                padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
+                padding: const EdgeInsets.fromLTRB(20, 12, 20, 18),
                 child: _BudgetPanel(
                   profileName: profile.name,
                   profileIconIndex: profile.iconIndex,
@@ -198,7 +198,7 @@ class _ProfileWishlistPage extends ConsumerWidget {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
+                padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Row(
                   children: [
                     Expanded(
@@ -236,10 +236,10 @@ class _ProfileWishlistPage extends ConsumerWidget {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
+                padding: const EdgeInsets.fromLTRB(20, 12, 20, 8),
                 child: Container(
                   decoration: BoxDecoration(
-                    color: const Color(0xFFE9EFEE),
+                    color: const Color(0xFFE0F2FE),
                     borderRadius: BorderRadius.circular(18),
                   ),
                   child: TabBar(
@@ -247,7 +247,7 @@ class _ProfileWishlistPage extends ConsumerWidget {
                     indicatorSize: TabBarIndicatorSize.tab,
                     indicatorPadding: const EdgeInsets.all(4),
                     indicator: BoxDecoration(
-                      color: Theme.of(context).colorScheme.primary,
+                      color: const Color(0xFF0284C7),
                       borderRadius: BorderRadius.circular(14),
                       boxShadow: const [
                         BoxShadow(
@@ -481,7 +481,6 @@ class _BudgetPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final primary = Theme.of(context).colorScheme.primary;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -490,14 +489,14 @@ class _BudgetPanel extends StatelessWidget {
           padding: const EdgeInsets.all(22),
           decoration: BoxDecoration(
             gradient: const LinearGradient(
-              colors: [Color(0xFF087F75), Color(0xFF42C9A5)],
+              colors: [Color(0xFF2563EB), Color(0xFF38BDF8)],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
             borderRadius: BorderRadius.circular(24),
             boxShadow: const [
               BoxShadow(
-                color: Color(0x33087F75),
+                color: Color(0x222563EB),
                 blurRadius: 22,
                 offset: Offset(0, 10),
               ),
@@ -562,15 +561,33 @@ class _BudgetPanel extends StatelessWidget {
                 children: [
                   TextButton.icon(
                     onPressed: () => onAdjust(1),
-                    style: TextButton.styleFrom(foregroundColor: Colors.white),
-                    icon: const Icon(Icons.add_circle_outline),
+                    style: TextButton.styleFrom(
+                      foregroundColor: const Color(0xFF1E293B),
+                      backgroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 8,
+                      ),
+                      shape: const StadiumBorder(),
+                      visualDensity: VisualDensity.compact,
+                    ),
+                    icon: const Icon(Icons.add_circle_outline, size: 18),
                     label: Text(context.loc.addFunds),
                   ),
                   const SizedBox(width: 8),
                   TextButton.icon(
                     onPressed: () => onAdjust(-1),
-                    style: TextButton.styleFrom(foregroundColor: Colors.white),
-                    icon: const Icon(Icons.remove_circle_outline),
+                    style: TextButton.styleFrom(
+                      foregroundColor: const Color(0xFF1E293B),
+                      backgroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 8,
+                      ),
+                      shape: const StadiumBorder(),
+                      visualDensity: VisualDensity.compact,
+                    ),
+                    icon: const Icon(Icons.remove_circle_outline, size: 18),
                     label: Text(context.loc.subtractFunds),
                   ),
                 ],
@@ -592,11 +609,11 @@ class _BudgetPanel extends StatelessWidget {
                       tooltip: context.loc.quickAddFunds,
                       shape: const StadiumBorder(),
                       side: BorderSide.none,
-                      backgroundColor: primary.withValues(alpha: .1),
+                      backgroundColor: const Color(0xFFE0F2FE),
                       label: Text(
                         '+${currency.format(amount)}',
                         style: TextStyle(
-                          color: primary,
+                          color: const Color(0xFF0284C7),
                           fontWeight: FontWeight.w800,
                         ),
                       ),
@@ -658,7 +675,7 @@ class _WishlistTab extends ConsumerWidget {
                 ],
               )
             : ReorderableListView.builder(
-                padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+                padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
                 itemCount: list.length,
                 onReorderItem: (oldIndex, newIndex) async {
                   final reordered = [...list];
@@ -716,11 +733,11 @@ class _WishlistItemTile extends ConsumerWidget {
         item.price == 0 ? 1.0 : (budget / item.price).clamp(0.0, 1.0);
     final theme = Theme.of(context);
     return Card(
-      margin: const EdgeInsets.only(bottom: 12),
-      color: item.isPurchased ? const Color(0xFFFCFDFD) : Colors.white,
-      elevation: 2,
-      shadowColor: Colors.black12,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      margin: const EdgeInsets.only(bottom: 18),
+      color: Colors.white,
+      elevation: 1,
+      shadowColor: const Color(0x0F000000),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: onOpen,
@@ -831,8 +848,8 @@ class _WishlistItemTile extends ConsumerWidget {
                 value: progress,
                 minHeight: 12,
                 borderRadius: BorderRadius.circular(8),
-                color: const Color(0xFF12A88D),
-                backgroundColor: const Color(0xFFEAF0EF),
+                color: const Color(0xFF0EA5E9),
+                backgroundColor: const Color(0xFFE2E8F0),
               ),
               const SizedBox(height: 6),
               Text(

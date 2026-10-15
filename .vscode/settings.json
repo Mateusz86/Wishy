@@ -1,3 +1,8 @@
 {
-    "java.configuration.updateBuildConfiguration": "interactive"
+    "java.configuration.updateBuildConfiguration": "interactive",
+    "dart.flutterSdkPath": "/home/mateusz/flutter",
+    "terminal.integrated.env.linux": {
+        "JAVA_HOME": "/usr/lib/sdk/openjdk21/jvm/openjdk-21",
+        "PATH": "/usr/lib/sdk/openjdk21/bin:/usr/lib/sdk/openjdk21/jvm/openjdk-21/bin:/home/mateusz/flutter/bin:${env:PATH}"
+    }
 }

@@ -7,13 +7,7 @@ class WishyGradientBackground extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [Colors.teal.withValues(alpha: 0.1), Colors.white],
-          ),
-        ),
+        color: const Color(0xFFF4F8FC),
         child: child,
       );
 }
